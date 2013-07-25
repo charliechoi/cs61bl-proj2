@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Proof {
-  
+	
 	private Queue<String> proofQueue = new LinkedList<String>();
 	private Queue<LineNumber> LineQueue = new LinkedList<LineNumber>();
 	private ArrayList<String> LineNumCollection = new ArrayList<String>();
@@ -48,12 +48,16 @@ public class Proof {
 			LineQueue.add(number);
 			proofQueue.add(x);
 			String[] split = x.split(" ",0);
-			Expression temp = new Expression(split[split.length-1]);
-			expressionList.add(temp);
+			Expression proofExpression = new Expression(split[split.length-1]);
+			expressionList.add(proofExpression);
 			if (split[0].equals("mt") && split.length == 4){
 				int indexOne = LineNumCollection.indexOf(split[1]);
 				int indexTwo = LineNumCollection.indexOf(split[2]);
-				
+				if (expressionList.get(indexOne).checkBoolean()){
+					if(expressionList.get(indexTwo).checkBoolean()){
+						proofExpression.setBoolean(true);
+					}
+				}
 			}
 		}
 	}
