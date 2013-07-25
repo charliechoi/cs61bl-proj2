@@ -51,23 +51,35 @@ public class Proof {
 			String[] split = x.split(" ",0);
 			Expression proofExpression = new Expression(split[split.length-1]);
 			expressionList.add(proofExpression);
-			if (split[0].equals("mt") && split.length == 4){
+			if (split[0].equals("mp") && split.length == 4){
 				int indexOne = LineNumCollection.indexOf(split[1]);
 				int indexTwo = LineNumCollection.indexOf(split[2]);
 				if (expressionList.get(indexOne).checkBoolean()){
 					if(expressionList.get(indexTwo).checkBoolean()){
 						proofExpression.setBoolean(true);
-					}
-					if(proofExpression.equals(showStack.pop())){
-						number.DeleteSub();
+						if(proofExpression.equals(showStack.pop())){
+							number.DeleteSub();
+						} else {
+							number.NewLine();
+						}
 					} else {
-						number.NewLine();
+						throw new IllegalInferenceException("mp error");
 					}
+				} else {
+					throw new IllegalInferenceException("mp error");
 				}
-			} else if (split[0].equals("show")&& split.length==2){
 				
-			}
-			
+			} else if (split[0].equals("show")&& split.length==2){
+				if(showStack.isEmpty()){
+					number.NewLine();
+				} else {
+					number.NewSubLine();
+				}
+				showStack.push(proofExpression);
+			} else if (split[0].equals("assume")&& split.length==2)
+				proofExpression.setBoolean(true);
+				number.NewLine();
+			} else if 
 		}
 	}
 
