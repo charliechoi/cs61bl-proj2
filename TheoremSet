@@ -1,0 +1,15 @@
+import java.util.*;
+
+
+public class TheoremSet {
+  protected HashMap Theorem = new HashMap();
+	
+	public TheoremSet ( ) {
+		
+	}
+
+	public Expression put (String s, Expression e) {
+		Theorem.put(s,e);
+		return e;
+	}
+}
