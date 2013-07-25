@@ -9,6 +9,7 @@ public class Proof {
 	private LineNumber number = new LineNumber();
 	private LineNumber forPrint = new LineNumber();
 	private ArrayList<Expression> expressionList = new ArrayList<Expression>();
+	private Stack<Expression> showStack = new Stack<Expression>();
 	
 	public Proof (TheoremSet theorems) {
 		
@@ -57,8 +58,16 @@ public class Proof {
 					if(expressionList.get(indexTwo).checkBoolean()){
 						proofExpression.setBoolean(true);
 					}
+					if(proofExpression.equals(showStack.pop())){
+						number.DeleteSub();
+					} else {
+						number.NewLine();
+					}
 				}
+			} else if (split[0].equals("show")&& split.length==2){
+				
 			}
+			
 		}
 	}
 
