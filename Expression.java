@@ -9,6 +9,7 @@ public class Expression {
 
 	protected TreeNode myRoot;
 	protected String myLine="";
+	protected boolean somethin = false;
 	public Expression(String line) {
 		myLine=line;
 
@@ -33,6 +34,13 @@ public class Expression {
 	}
 	public String aString(){
 		return myLine;
+	}
+	public boolean setBoolean(boolean a){
+		somethin = a;
+		return somethin;
+	}
+	public boolean checkBoolean(){
+		return somethin;
 	}
 	protected static final String indent1 = "    ";
 	public void print ( ) {
