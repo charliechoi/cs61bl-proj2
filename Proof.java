@@ -71,20 +71,20 @@ public class Proof {
 					boolean checking = false;
 					
 					//find out which expression is larger, and see if the shorter one is inside the longer one.
-					if (first.aString().length()>second.aString().length()){
+					if (first.myLine.length()>second.myLine.length()){
 						Expression Shorter = second;
 						//split into left and right side of =>. I realized this is sufficient.
-						String[] tempSplit = first.aString().split("=>",2);
+						String[] tempSplit = first.myLine.split("=>",2);
 						//also check if right side of longer expression is the expression we want to set boolean to.
-						if(tempSplit[0].equals(Shorter.aString()) && tempSplit[1].equals(proofExpression.aString())){
+						if(tempSplit[0].equals(Shorter.myLine) && tempSplit[1].equals(proofExpression.myLine)){
 							checking = true;
 						} else{
 							checking = false;
 						}
-					} else if (first.aString().length()<second.aString().length()){
+					} else if (first.myLine.length()<second.myLine.length()){
 						Expression Shorter = first;
-						String[] tempSplit = second.aString().split("=>",2);
-						if(tempSplit[0].equals(Shorter.aString())&& tempSplit[1].equals(proofExpression.aString())){
+						String[] tempSplit = second.myLine.split("=>",2);
+						if(tempSplit[0].equals(Shorter.myLine)&& tempSplit[1].equals(proofExpression.myLine)){
 							checking = true;
 						} else{
 							checking = false;
@@ -102,6 +102,7 @@ public class Proof {
 								}else{
 									proofExpression.setBoolean(true);
 								}
+								//update expressionList
 								expressionList.add(proofExpression);
 								if(proofExpression.equals(showStack.pop())){
 									number.DeleteSub();
@@ -118,9 +119,23 @@ public class Proof {
 								}else{
 									proofExpression.setBoolean(true);
 								}
+								//update expression
 								expressionList.add(proofExpression);
-								if(proofExpression.equals(showStack.pop())){
+								//update linenum
+								if(proofExpression.equals(showStack.peek())){
 									number.DeleteSub();
+									// assign the most recent show object to true or false depending on number of ~.
+									Expression recentShow = showStack.pop();
+									Expression show = expressionList.get(expressionList.indexOf(recentShow));
+									Expression showcopy = show;
+									showcopy.myLine.replace("~","");
+									int shownotcount = show.myLine.length()-showcopy.myLine.length();
+									
+									if (shownotcount%2==1){
+										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(false);
+									}else{
+										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(true);
+									}	
 								} else {
 									number.NewLine();
 								}
@@ -133,7 +148,7 @@ public class Proof {
 						}
 					}
 					
-					
+				//show	
 				} else if (split[0].equals("show")&& split.length==2){
 					if(showStack.isEmpty()){
 						number.NewLine();
@@ -142,6 +157,8 @@ public class Proof {
 					}
 					expressionList.add(proofExpression);
 					showStack.push(proofExpression);
+					
+				//assume	
 				} else if (split[0].equals("assume") && split.length==2){
 					if (notCount%2==1){
 						proofExpression.setBoolean(false);
@@ -150,6 +167,8 @@ public class Proof {
 					}
 					expressionList.add(proofExpression);
 					number.NewLine();
+					
+				//mt	
 				}else if (split[0].equals("mt") && split.length==4){
 					//take index of line numbers specified by proof, which also should be the index of the corresponding proof stored in expressionList
 					int indexOne = LineNumCollection.indexOf(split[1]);
@@ -160,15 +179,15 @@ public class Proof {
 					// a boolean to determine if the expressions above are related to each other, as in if one object is a sub-expression of the other.
 					boolean checking = false;
 					
-					if (first.aString().length()>second.aString().length()){
+					if (first.myLine.length()>second.myLine.length()){
 						Expression Shorter = second;
 						Expression Longer = first;
 						//split into left and right side of =>. I realized this is sufficient.
-						String[] tempSplit = first.aString().split("=>",2);
+						String[] tempSplit = first.myLine.split("=>",2);
 						String negLeft = "~"+tempSplit[0];
 						String negRight = "~"+tempSplit[1];
 						//also check if right side of longer expression is the expression we want to set boolean to.
-						if(negRight.equals(Shorter.aString()) && negLeft.equals(proofExpression.aString())){
+						if(negRight.equals(Shorter.myLine) && negLeft.equals(proofExpression.myLine)){
 							checking = true;
 						} else{
 							checking = false;
@@ -184,8 +203,22 @@ public class Proof {
 									proofExpression.setBoolean(true);
 								}
 								expressionList.add(proofExpression);
-								if(proofExpression.equals(showStack.pop())){
+								if(proofExpression.equals(showStack.peek())){
 									number.DeleteSub();
+									// assign the most recent show object to true or false depending on number of ~.
+									Expression recentShow = showStack.pop();
+									Expression show = expressionList.get(expressionList.indexOf(recentShow));
+									Expression showcopy = show;
+									showcopy.myLine.replace("~","");
+									int shownotcount = show.myLine.length()-showcopy.myLine.length();
+									
+									if (shownotcount%2==1){
+										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(false);
+									}else{
+										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(true);
+									}
+									
+									
 								} else {
 									number.NewLine();
 								}
@@ -193,14 +226,14 @@ public class Proof {
 								throw new IllegalInferenceException("mt error");
 							}
 						}
-					} else if (first.aString().length()<second.aString().length()){
+					} else if (first.myLine.length()<second.myLine.length()){
 						Expression Shorter = first;
 						Expression Longer = second;
-						String[] tempSplit = first.aString().split("=>",2);
+						String[] tempSplit = first.myLine.split("=>",2);
 						String negLeft = "~"+tempSplit[0];
 						String negRight = "~"+tempSplit[1];
 						//also check if right side of longer expression is the expression we want to set boolean to.
-						if(negRight.equals(Shorter.aString()) && negLeft.equals(proofExpression.aString())){
+						if(negRight.equals(Shorter.myLine) && negLeft.equals(proofExpression.myLine)){
 							checking = true;
 						} else{
 							checking = false;
@@ -216,16 +249,33 @@ public class Proof {
 									proofExpression.setBoolean(true);
 								}
 								expressionList.add(proofExpression);
-								if(proofExpression.equals(showStack.pop())){
+								if(proofExpression.equals(showStack.peek())){
 									number.DeleteSub();
+									// assign the most recent show object to true or false depending on number of ~.
+									Expression recentShow = showStack.pop();
+									Expression show = expressionList.get(expressionList.indexOf(recentShow));
+									Expression showcopy = show;
+									showcopy.myLine.replace("~","");
+									int shownotcount = show.myLine.length()-showcopy.myLine.length();
+									
+									if (shownotcount%2==1){
+										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(false);
+									}else{
+										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(true);
+									}	
 								} else {
 									number.NewLine();
 								}
 							} else {
-								throw new IllegalInferenceException("mt error");
+								throw new IllegalInferenceException("wrong inference");
 							}
 						}
 					}
+					
+				//co
+				} else if (split[0].equals("co") && split.length==4){
+					
+				}
 					
 					
 					
@@ -234,7 +284,7 @@ public class Proof {
 			}
 		}
 		
-	}
+	
 
 	public String toString ( ) {
 		return "";
