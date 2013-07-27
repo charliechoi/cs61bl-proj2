@@ -1,4 +1,3 @@
-
 import java.util.*;
 
 
@@ -7,12 +6,12 @@ import java.util.*;
 
 
 public class Expression {
-	
+
 	private TreeNode myRoot;
 	private String myLine="";
 	public Expression(String line) {
 		myLine=line;
-		
+
 	}
 	protected static class TreeNode {
 
@@ -30,7 +29,10 @@ public class Expression {
 			myLeft = left;
 			myRight = right;
 		}
-	
+
+	}
+	public String aString(){
+		return myLine;
 	}
 	protected static final String indent1 = "    ";
 	public void print ( ) {
@@ -64,7 +66,10 @@ public class Expression {
 	}
 
 
-	
+	public TreeNode expr(){
+		TreeNode a = exprTree(myLine);
+		return a;
+	}
 	// Return the tree corresponding to the given arithmetic expression.
 	// The expression is legal, fully parenthesized, contains no blanks, 
 	// and involves two variables, =>,|, &.
@@ -85,7 +90,7 @@ public class Expression {
 	        int opPos = 0;
 	        int opPos2 =0; //deal specifically with =>
 	        boolean addNot=false;
-	        
+
 	        for (int k=0; k<expr.length()-1; k++) {
 	        	if(expr.charAt(k)=='('){
 	        		nesting++;
@@ -105,7 +110,7 @@ public class Expression {
 	        			opnd2 = expr.substring (opPos+1, expr.length()-1);
 	        			op = expr.substring (opPos, opPos+1);
 	        			break;
-	        		
+
 	        	}
 	        }
 	        if (addNot){
@@ -121,9 +126,11 @@ public class Expression {
 	        	return new TreeNode(op,exprTree(opnd1),exprTree(opnd2));
 	    }
 	    }
-	    
-	    
-	public boolean compare(TreeNode treeProof, TreeNode treeCheck){
+
+
+	public boolean compare(Expression Check){
+		TreeNode treeProof = exprTree(myLine);
+		TreeNode treeCheck = exprTree( Check.aString());
         HashMap subTree = new HashMap();
         boolean compareTruth = inOrder(treeProof, treeCheck, subTree);
         return compareTruth;
@@ -166,11 +173,8 @@ public class Expression {
             return false;
         }
         }
-    if (Proof.myItem.equals(Check.myItem)){
-        return true;
-    }else{
-        return false;
+    return true;
+  
 }
 }
 
-}
