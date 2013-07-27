@@ -5,8 +5,8 @@ import org.junit.Test;
 
 public class ExpressionTest {
 
-  @Test
-	public void test() {
+	@Test
+	public void printTest() {
 		
 			Expression a = new Expression("(a&b)");
 			Expression b = new Expression("(c&d)");
@@ -14,6 +14,19 @@ public class ExpressionTest {
 			a.print();
 			b.expr();
 			b.print();
+	}
+	public void aStringTest(){
+		Expression a = new Expression("(a&b)");
+		Expression b = new Expression("(c&d)");
+		assertTrue(a.aString().equals("(a&b)"));
+		assertFalse(a.aString().equals("a"));
+		assertTrue(b.aString().equals("(c&d)"));
+		assertFalse(a.aString().equals(b.aString()));
+		assertTrue(a.aString().equals(a.aString()));
+	}
+	public void compareTest(){
+			Expression a = new Expression("(a&b)");
+			Expression b = new Expression("(c&d)");
 			assertTrue(a.compare(b));
 			Expression c = new Expression("(c|d)");
 			assertFalse(a.compare(c));
@@ -32,5 +45,7 @@ public class ExpressionTest {
 			}
 		
 	}
+
+
 
 
