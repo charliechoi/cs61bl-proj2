@@ -74,7 +74,13 @@ public class Proof {
 					if (first.myLine.length()>second.myLine.length()){
 						Expression Shorter = second;
 						//split into left and right side of =>. I realized this is sufficient.
-						String[] tempSplit = first.myLine.split("=>",2);
+						int firstIndex= first.myLine.indexOf(Shorter.myLine);
+						int shorterLength = Shorter.myLine.length();
+						
+						String[] tempSplit = new String[2];
+						tempSplit[0] = first.myLine.substring(1, firstIndex+shorterLength-1);
+						tempSplit[1] = first.myLine.substring(shorterLength+2, first.myLine.length()-1);
+						
 						//also check if right side of longer expression is the expression we want to set boolean to.
 						if(tempSplit[0].equals(Shorter.myLine) && tempSplit[1].equals(proofExpression.myLine)){
 							checking = true;
@@ -83,7 +89,12 @@ public class Proof {
 						}
 					} else if (first.myLine.length()<second.myLine.length()){
 						Expression Shorter = first;
-						String[] tempSplit = second.myLine.split("=>",2);
+						int firstIndex= first.myLine.indexOf(Shorter.myLine);
+						int shorterLength = Shorter.myLine.length();
+						
+						String[] tempSplit = new String[2];
+						tempSplit[0] = first.myLine.substring(1, firstIndex+shorterLength-1);
+						tempSplit[1] = first.myLine.substring(shorterLength+2, first.myLine.length()-1);
 						if(tempSplit[0].equals(Shorter.myLine)&& tempSplit[1].equals(proofExpression.myLine)){
 							checking = true;
 						} else{
