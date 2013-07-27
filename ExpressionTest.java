@@ -25,6 +25,9 @@ public class ExpressionTest {
 			assertTrue(a.compare(f));
 			Expression g = new Expression("(a|(b&(a|b)))");
 			assertFalse(a.compare(g));
+			Expression h = new Expression("(a|(b=>(a|b)))");
+			Expression k = new Expression("((x|y)|((x&b)=>((x|y)|(x&b))))");
+			assertTrue(h.compare(k));
 			
 			}
 		
