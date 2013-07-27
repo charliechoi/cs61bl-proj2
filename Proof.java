@@ -61,8 +61,13 @@ public class Proof {
 				
 				//mp
 				if (split[0].equals("mp") && split.length == 4){
-
-					if (this.checking(proofExpression, split)){
+					int indexOne = LineNumCollection.indexOf(split[1]);
+					int indexTwo = LineNumCollection.indexOf(split[2]);
+					//get the corresponding expressions
+					Expression first = expressionList.get(indexOne);
+					Expression second = expressionList.get(indexTwo);
+					
+					if (!this.checkingMP(proofExpression, split)){
 						throw new IllegalInferenceException("mp error");
 					} else {
 						if (first.checkBoolean()){
@@ -74,11 +79,9 @@ public class Proof {
 								}
 								//update expressionList
 								expressionList.add(proofExpression);
-								if(proofExpression.equals(showStack.pop())){
-									number.DeleteSub();
-								} else {
-									number.NewLine();
-								}
+								//update line number and add boolean to show if pertinent.
+								this.update(proofExpression);
+								
 							} else {
 								throw new IllegalInferenceException("mp error");
 							}
@@ -91,24 +94,7 @@ public class Proof {
 								}
 								//update expression
 								expressionList.add(proofExpression);
-								//update linenum
-								if(proofExpression.equals(showStack.peek())){
-									number.DeleteSub();
-									// assign the most recent show object to true or false depending on number of ~.
-									Expression recentShow = showStack.pop();
-									Expression show = expressionList.get(expressionList.indexOf(recentShow));
-									Expression showcopy = show;
-									showcopy.myLine.replace("~","");
-									int shownotcount = show.myLine.length()-showcopy.myLine.length();
-									
-									if (shownotcount%2==1){
-										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(false);
-									}else{
-										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(true);
-									}	
-								} else {
-									number.NewLine();
-								}
+								this.update(proofExpression);
 							} else{
 								throw new IllegalInferenceException("mp error");
 							}
@@ -147,113 +133,22 @@ public class Proof {
 					Expression first = expressionList.get(indexOne);
 					Expression second = expressionList.get(indexTwo);
 					// a boolean to determine if the expressions above are related to each other, as in if one object is a sub-expression of the other.
-					boolean checking = false;
 					
-					if (first.myLine.length()>second.myLine.length()){
-						Expression Shorter = second;
-						Expression Longer = first;
-						//split into left and right side of =>. I realized this is sufficient.
-						
-						int firstIndex= first.myLine.indexOf(Shorter.myLine);
-						int shorterLength = Shorter.myLine.length();
-						
-						String[] tempSplit = new String[2];
-						tempSplit[0] = first.myLine.substring(1, firstIndex+shorterLength-1);
-						tempSplit[1] = first.myLine.substring(shorterLength+2, first.myLine.length()-1);
-						
-						String negLeft = "~"+tempSplit[0];
-						String negRight = "~"+tempSplit[1];
-						//also check if right side of longer expression is the expression we want to set boolean to.
-						if(negRight.equals(Shorter.myLine) && negLeft.equals(proofExpression.myLine)){
-							checking = true;
-						} else{
-							checking = false;
-						}
-						
-						if (!checking){
+						if (this.checkingMT(proofExpression, split)){
 							throw new IllegalInferenceException("mt error");
 						} else {
-							if (Longer.checkBoolean()==true){
+							if (this.getLonger(split).checkBoolean()==true){
 								if (notCount%2==1){
 									proofExpression.setBoolean(false);
 								}else{
 									proofExpression.setBoolean(true);
 								}
 								expressionList.add(proofExpression);
-								if(proofExpression.equals(showStack.peek())){
-									number.DeleteSub();
-									// assign the most recent show object to true or false depending on number of ~.
-									Expression recentShow = showStack.pop();
-									Expression show = expressionList.get(expressionList.indexOf(recentShow));
-									Expression showcopy = show;
-									showcopy.myLine.replace("~","");
-									int shownotcount = show.myLine.length()-showcopy.myLine.length();
-									
-									if (shownotcount%2==1){
-										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(false);
-									}else{
-										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(true);
-									}
-									
-									
-								} else {
-									number.NewLine();
-								}
+								this.update(proofExpression);
 							} else {
 								throw new IllegalInferenceException("mt error");
 							}
 						}
-					} else if (first.myLine.length()<second.myLine.length()){
-						Expression Shorter = first;
-						Expression Longer = second;
-						
-						int firstIndex= first.myLine.indexOf(Shorter.myLine);
-						int shorterLength = Shorter.myLine.length();
-						
-						String[] tempSplit = new String[2];
-						tempSplit[0] = first.myLine.substring(1, firstIndex+shorterLength-1);
-						tempSplit[1] = first.myLine.substring(shorterLength+2, first.myLine.length()-1);
-						String negLeft = "~"+tempSplit[0];
-						String negRight = "~"+tempSplit[1];
-						//also check if right side of longer expression is the expression we want to set boolean to.
-						if(negRight.equals(Shorter.myLine) && negLeft.equals(proofExpression.myLine)){
-							checking = true;
-						} else{
-							checking = false;
-						}
-						
-						if (!checking){
-							throw new IllegalInferenceException("mt error");
-						} else {
-							if (Longer.checkBoolean()==true){
-								if (notCount%2==1){
-									proofExpression.setBoolean(false);
-								}else{
-									proofExpression.setBoolean(true);
-								}
-								expressionList.add(proofExpression);
-								if(proofExpression.equals(showStack.peek())){
-									number.DeleteSub();
-									// assign the most recent show object to true or false depending on number of ~.
-									Expression recentShow = showStack.pop();
-									Expression show = expressionList.get(expressionList.indexOf(recentShow));
-									Expression showcopy = show;
-									showcopy.myLine.replace("~","");
-									int shownotcount = show.myLine.length()-showcopy.myLine.length();
-									
-									if (shownotcount%2==1){
-										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(false);
-									}else{
-										expressionList.get(expressionList.indexOf(recentShow)).setBoolean(true);
-									}	
-								} else {
-									number.NewLine();
-								}
-							} else {
-								throw new IllegalInferenceException("wrong inference");
-							}
-						}
-					}
 					
 				//co
 				} else if (split[0].equals("co") && split.length==4){
@@ -277,7 +172,7 @@ public class Proof {
 		return true;
 	}
 	
-	public boolean checking(Expression proofExpression, String[] split){
+	public boolean checkingMP(Expression proofExpression, String[] split){
 		
 			if(this.getLeft(split).equals(this.getShorter(split).myLine) && this.getRight(split).equals(proofExpression.myLine)){
 				return true;
@@ -286,6 +181,17 @@ public class Proof {
 			}
 		
 		}
+	
+	public boolean checkingMT(Expression proofExpression, String[] split){
+		String negLeft = "~"+this.getLeft(split);
+		String negRight = "~"+this.getLeft(split);
+		//also check if right side of longer expression is the expression we want to set boolean to.
+		if(negRight.equals(this.getShorter(split).myLine) && negLeft.equals(proofExpression.myLine)){
+			return true;
+		} else{
+			return false;
+		}
+	}
 	
 	public String getLeft(String [] split){
 		//take index of line numbers specified by proof, which also should be the index of the corresponding proof stored in expressionList
@@ -353,6 +259,26 @@ public class Proof {
 			return null;
 		}
 		
+	}
+	
+	public void update(Expression proofExpression){
+		if(proofExpression.equals(showStack.peek())){
+			number.DeleteSub();
+			// assign the most recent show object to true or false depending on number of ~.
+			Expression recentShow = showStack.pop();
+			Expression show = expressionList.get(expressionList.indexOf(recentShow));
+			Expression showcopy = show;
+			showcopy.myLine.replace("~","");
+			int shownotcount = show.myLine.length()-showcopy.myLine.length();
+			
+			if (shownotcount%2==1){
+				expressionList.get(expressionList.indexOf(recentShow)).setBoolean(false);
+			}else{
+				expressionList.get(expressionList.indexOf(recentShow)).setBoolean(true);
+			}	
+		} else {
+			number.NewLine();
+		}
 	}
 	
 	
