@@ -13,7 +13,7 @@ public class ProofTest extends TestCase {
 	public void testProof1(){
 		 Proof soFar = new Proof (check);
 		 String numba1=soFar.nextLineNumber ( );
-		 assertEquals(numba1, 1);// checking line number
+		 assertEquals(numba1 , "1");// checking line number
 		 System.out.print (numba1 + "\t");
 		 try{soFar.extendProof("show (q=>q)");
 		 }catch (IllegalLineException e) {
@@ -21,7 +21,7 @@ public class ProofTest extends TestCase {
          }
 		 assertFalse(soFar.isComplete()); // checking isComplete
 		 String numba2=soFar.nextLineNumber ( );
-		 assertEquals(numba2, 2);//checking line number
+		 assertEquals(numba2, "2");//checking line number
 		 System.out.print (numba2 + "\t");
 
 		 try{soFar.extendProof("assume q");
@@ -29,7 +29,7 @@ public class ProofTest extends TestCase {
          } catch (IllegalInferenceException e) {
          }assertFalse(soFar.isComplete()); // checking isComplete
          String numba3=soFar.nextLineNumber ( );
-		 assertEquals(numba3, 3); //checking line number
+		 assertEquals(numba3, "3"); //checking line number
 		 System.out.print (numba3 + "\t");
 
 		 try{soFar.extendProof("ic 2 (q=>q)");
