@@ -281,6 +281,14 @@ public class Proof {
 		}
 	}
 	
+	public boolean isComplete ( ) {
+		if(showStack.empty()==true){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	
 	// check if index of expression corresponds to correct line number. will be called everytime in extendproof.
 	public boolean isOK(){
