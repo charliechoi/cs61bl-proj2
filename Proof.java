@@ -7,7 +7,6 @@ public class Proof {
 	private Queue<LineNumber> LineQueue = new LinkedList<LineNumber>();
 	private ArrayList<String> LineNumCollection = new ArrayList<String>();
 	private LineNumber number = new LineNumber();
-	private LineNumber forPrint = new LineNumber();
 	private ArrayList<Expression> expressionList = new ArrayList<Expression>();
 	private Stack<Expression> showStack = new Stack<Expression>();
 	
@@ -46,28 +45,94 @@ public class Proof {
 				System.out.print(proofQueueCopy.remove());
 			}
 		} else {
+			//update line repository
 			LineQueue.add(number);
+			//update proof repository
 			proofQueue.add(x);
+			//split reason from line numbers from proof.
 			String[] split = x.split(" ",0);
+			//obtain proof expression
 			Expression proofExpression = new Expression(split[split.length-1]);
-			expressionList.add(proofExpression);
+			//an attempt to figure out if expression requires false or true when setting boolean at the end.
+			int notCount=0;
+			String temp = split[split.length-1];
+			temp.replace("~","");
+			notCount = split[split.length-1].length() - temp.length();
+			
+			//mp
 			if (split[0].equals("mp") && split.length == 4){
+				//take index of line numbers specified by proof, which also should be the index of the corresponding proof stored in expressionList
 				int indexOne = LineNumCollection.indexOf(split[1]);
 				int indexTwo = LineNumCollection.indexOf(split[2]);
-				if (expressionList.get(indexOne).checkBoolean()){
-					if(expressionList.get(indexTwo).checkBoolean()){
-						proofExpression.setBoolean(true);
-						if(proofExpression.equals(showStack.pop())){
-							number.DeleteSub();
+				//get the corresponding expressions
+				Expression first = expressionList.get(indexOne);
+				Expression second = expressionList.get(indexTwo);
+				// a boolean to determine if the expressions above are related to each other, as in if one object is a sub-expression of the other.
+				boolean checking = false;
+				
+				//find out which expression is larger, and see if the shorter one is inside the longer one.
+				if (first.myLine.length()>second.myLine.length()){
+					Expression Shorter = second;
+					//split into left and right side of =>. I realized this is sufficient.
+					String[] tempSplit = first.myLine.split("=>",2);
+					//also check if right side of longer expression is the expression we want to set boolean to.
+					if(tempSplit[0].equals(Shorter.myLine) && tempSplit[1].equals(proofExpression.myLine)){
+						checking = true;
+					} else{
+						checking = false;
+					}
+				} else if (first.myLine.length()<second.myLine.length()){
+					Expression Shorter = first;
+					String[] tempSplit = second.myLine.split("=>",2);
+					if(tempSplit[0].equals(Shorter.myLine)&& tempSplit[1].equals(proofExpression.myLine)){
+						checking = true;
+					} else{
+						checking = false;
+					}
+				} 
+				
+				
+				if (!checking){
+					throw new IllegalInferenceException("mp error");
+				} else {
+					if (first.checkBoolean()){
+						if(second.checkBoolean()){
+							if (notCount%2==1){
+								proofExpression.setBoolean(false);
+							}else{
+								proofExpression.setBoolean(true);
+							}
+							expressionList.add(proofExpression);
+							if(proofExpression.equals(showStack.pop())){
+								number.DeleteSub();
+							} else {
+								number.NewLine();
+							}
 						} else {
-							number.NewLine();
+							throw new IllegalInferenceException("mp error");
 						}
-					} else {
+					} else if (!expressionList.get(indexOne).checkBoolean()){
+						if (!expressionList.get(indexOne).checkBoolean()){
+							if (notCount%2==1){
+								proofExpression.setBoolean(false);
+							}else{
+								proofExpression.setBoolean(true);
+							}
+							expressionList.add(proofExpression);
+							if(proofExpression.equals(showStack.pop())){
+								number.DeleteSub();
+							} else {
+								number.NewLine();
+							}
+						} else{
+							throw new IllegalInferenceException("mp error");
+						}
+						
+					} else{
 						throw new IllegalInferenceException("mp error");
 					}
-				} else {
-					throw new IllegalInferenceException("mp error");
 				}
+				
 				
 			} else if (split[0].equals("show")&& split.length==2){
 				if(showStack.isEmpty()){
@@ -75,12 +140,22 @@ public class Proof {
 				} else {
 					number.NewSubLine();
 				}
+				expressionList.add(proofExpression);
 				showStack.push(proofExpression);
-			} else if (split[0].equals("assume")&& split.length==2)
-				proofExpression.setBoolean(true);
+			} else if (split[0].equals("assume") && split.length==2){
+				
+				if (notCount%2==1){
+					proofExpression.setBoolean(false);
+				}else{
+					proofExpression.setBoolean(true);
+				}
+				expressionList.add(proofExpression);
 				number.NewLine();
-			} else if 
-		}
+			}else if (split[0].equals("mt") && split.length==4){
+				int indexOne = LineNumCollection.indexOf(split[1]);
+				int indexTwo = LineNumCollection.indexOf(split[2]);
+				
+			}
 	}
 
 	public String toString ( ) {
