@@ -71,20 +71,20 @@ public class Proof {
 					boolean checking = false;
 					
 					//find out which expression is larger, and see if the shorter one is inside the longer one.
-					if (first.myLine.length()>second.myLine.length()){
+					if (first.aString().length()>second.aString().length()){
 						Expression Shorter = second;
 						//split into left and right side of =>. I realized this is sufficient.
-						String[] tempSplit = first.myLine.split("=>",2);
+						String[] tempSplit = first.aString().split("=>",2);
 						//also check if right side of longer expression is the expression we want to set boolean to.
-						if(tempSplit[0].equals(Shorter.myLine) && tempSplit[1].equals(proofExpression.myLine)){
+						if(tempSplit[0].equals(Shorter.aString()) && tempSplit[1].equals(proofExpression.aString())){
 							checking = true;
 						} else{
 							checking = false;
 						}
-					} else if (first.myLine.length()<second.myLine.length()){
+					} else if (first.aString().length()<second.aString().length()){
 						Expression Shorter = first;
-						String[] tempSplit = second.myLine.split("=>",2);
-						if(tempSplit[0].equals(Shorter.myLine)&& tempSplit[1].equals(proofExpression.myLine)){
+						String[] tempSplit = second.aString().split("=>",2);
+						if(tempSplit[0].equals(Shorter.aString())&& tempSplit[1].equals(proofExpression.aString())){
 							checking = true;
 						} else{
 							checking = false;
@@ -159,6 +159,75 @@ public class Proof {
 					Expression second = expressionList.get(indexTwo);
 					// a boolean to determine if the expressions above are related to each other, as in if one object is a sub-expression of the other.
 					boolean checking = false;
+					
+					if (first.aString().length()>second.aString().length()){
+						Expression Shorter = second;
+						Expression Longer = first;
+						//split into left and right side of =>. I realized this is sufficient.
+						String[] tempSplit = first.aString().split("=>",2);
+						String negLeft = "~"+tempSplit[0];
+						String negRight = "~"+tempSplit[1];
+						//also check if right side of longer expression is the expression we want to set boolean to.
+						if(negRight.equals(Shorter.aString()) && negLeft.equals(proofExpression.aString())){
+							checking = true;
+						} else{
+							checking = false;
+						}
+						
+						if (!checking){
+							throw new IllegalInferenceException("mt error");
+						} else {
+							if (Longer.checkBoolean()==true){
+								if (notCount%2==1){
+									proofExpression.setBoolean(false);
+								}else{
+									proofExpression.setBoolean(true);
+								}
+								expressionList.add(proofExpression);
+								if(proofExpression.equals(showStack.pop())){
+									number.DeleteSub();
+								} else {
+									number.NewLine();
+								}
+							} else {
+								throw new IllegalInferenceException("mt error");
+							}
+						}
+					} else if (first.aString().length()<second.aString().length()){
+						Expression Shorter = first;
+						Expression Longer = second;
+						String[] tempSplit = first.aString().split("=>",2);
+						String negLeft = "~"+tempSplit[0];
+						String negRight = "~"+tempSplit[1];
+						//also check if right side of longer expression is the expression we want to set boolean to.
+						if(negRight.equals(Shorter.aString()) && negLeft.equals(proofExpression.aString())){
+							checking = true;
+						} else{
+							checking = false;
+						}
+						
+						if (!checking){
+							throw new IllegalInferenceException("mt error");
+						} else {
+							if (Longer.checkBoolean()==true){
+								if (notCount%2==1){
+									proofExpression.setBoolean(false);
+								}else{
+									proofExpression.setBoolean(true);
+								}
+								expressionList.add(proofExpression);
+								if(proofExpression.equals(showStack.pop())){
+									number.DeleteSub();
+								} else {
+									number.NewLine();
+								}
+							} else {
+								throw new IllegalInferenceException("mt error");
+							}
+						}
+					}
+					
+					
 					
 					
 				} 
