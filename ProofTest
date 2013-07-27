@@ -1,20 +1,18 @@
 import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
 import org.junit.Test;
 
 
-public class ProofTest {
+public class ProofTest extends TestCase {
 
-  @Test
-	public void test() {
-		fail("Not yet implemented");
-	}
+  
 	TheoremSet check;
-	
+
 	//testing isOkay and basic line number
 	public void testProof1(){
 		 Proof soFar = new Proof (check);
-		 LineNumber numba1=soFar.nextLineNumber ( );
+		 String numba1=soFar.nextLineNumber ( );
 		 assertEquals(numba1, 1);// checking line number
 		 System.out.print (numba1 + "\t");
 		 try{soFar.extendProof("show (q=>q)");
@@ -22,28 +20,28 @@ public class ProofTest {
          } catch (IllegalInferenceException e) {
          }
 		 assertFalse(soFar.isComplete()); // checking isComplete
-		 LineNumber numba2=soFar.nextLineNumber ( );
+		 String numba2=soFar.nextLineNumber ( );
 		 assertEquals(numba2, 2);//checking line number
 		 System.out.print (numba2 + "\t");
-		 
+
 		 try{soFar.extendProof("assume q");
 		 }catch (IllegalLineException e) {     
          } catch (IllegalInferenceException e) {
          }assertFalse(soFar.isComplete()); // checking isComplete
-         LineNumber numba3=soFar.nextLineNumber ( );
+         String numba3=soFar.nextLineNumber ( );
 		 assertEquals(numba3, 3); //checking line number
 		 System.out.print (numba3 + "\t");
-		
+
 		 try{soFar.extendProof("ic 2 (q=>q)");
 		 }catch (IllegalLineException e) {
 		 }catch (IllegalInferenceException e) {
 		 }assertTrue(soFar.isComplete()); // checking isComplete
 	}
-	
+
 	public void testInvalidTest(){
 		Proof soFar = new Proof (check);
-		boolean error1, error2, error3;
-		
+		boolean error1= false, error2 =false, error3=false;
+
 		try{soFar.extendProof("show(q=>q)");
 		 }catch (IllegalLineException e) {
             System.out.println (e.getMessage());
@@ -51,7 +49,7 @@ public class ProofTest {
         } catch (IllegalInferenceException e) {
             System.out.println (e.getMessage());
         }assertTrue(error1);           // catching IllegalLineException
-		
+
         try{soFar.extendProof("show (q=>q) p");
 		 }catch (IllegalLineException e) {
            System.out.println (e.getMessage());
@@ -68,7 +66,8 @@ public class ProofTest {
           System.out.println (e.getMessage());
       }assertTrue(error3); 
 	}
-	
+	/*
+
 	public void testSubProof(){
 		try{soFar.extendProof("show (p=>(~p=>q))")
 	}catch (IllegalInferenceException e) {	
@@ -82,11 +81,10 @@ public class ProofTest {
 		 3.1  assume ~p
 		 3.2  co 2 3.1 (~p=>q)
 		 4  ic 3 (p=>(~p=>q))
+*/
 
-	
 }
 
-	
-	
+
 
 
