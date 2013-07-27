@@ -192,6 +192,51 @@ public class Proof {
 			return false;
 		}
 	}
+	public boolean ic(String s,String [] split){
+		int indexOne = LineNumCollection.indexOf(split[1]);
+		String sub = expressionList.get(indexOne).aString();
+		String temper = s.replaceFirst(sub, "");
+		String first ="";
+		String operand ="";
+		String second ="";
+		if (temper.substring(0,1).equals("(")){
+			first = sub;
+			if (temper.substring(1,2).equals("=")){
+				operand = "=>";
+			}else{
+				operand = temper.substring(1,2);
+			}
+			String temp2 = sub.replaceFirst(operand, "");
+			second = temp2.substring(1,temp2.length()-2);
+				
+			
+		}else{
+			second = sub;
+			if (temper.substring(temper.length()-2,temper.length()-1).equals("=")){
+				operand = "=>";
+			}else{
+				operand = temper.substring(temper.length()-2,temper.length()-1);
+			}
+			String temp2 = operand + sub;
+			String temp3 = s.replaceFirst(temp2, "");
+			first = temp3.replaceFirst("(", "");
+			
+		}
+		int indexLeft = LineNumCollection.indexOf(second);
+		int indexRight = LineNumCollection.indexOf(first);
+		Expression lefty = expressionList.get(indexLeft);
+		Expression righty = expressionList.get(indexRight);
+		if (operand.equals("=>")||operand.equals("|")){
+			if (lefty.checkBoolean()==false && righty.checkBoolean()==false){
+				return false;
+			}
+		}else{
+			if (lefty.checkBoolean() == false || righty.checkBoolean() ==false){
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	public String getLeft(String [] split){
 		//take index of line numbers specified by proof, which also should be the index of the corresponding proof stored in expressionList
