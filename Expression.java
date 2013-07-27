@@ -7,8 +7,8 @@ import java.util.*;
 
 public class Expression {
 
-	private TreeNode myRoot;
-	private String myLine="";
+	protected TreeNode myRoot;
+	protected String myLine="";
 	public Expression(String line) {
 		myLine=line;
 
