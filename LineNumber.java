@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class LineNumber {
-  
+	
 	private String LineNum;
 	
 	public  LineNumber(){
@@ -33,12 +33,5 @@ public class LineNumber {
 		return LineNum;
 	}
 	
-	
-public static void main (String []args){
-	LineNumber blah = new LineNumber();
-
-	
-	
-	}
 }
 
