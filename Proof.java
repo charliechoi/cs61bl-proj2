@@ -85,8 +85,8 @@ public class Proof {
 							} else {
 								throw new IllegalInferenceException("mp error");
 							}
-						} else if (!expressionList.get(indexOne).checkBoolean()){
-							if (!expressionList.get(indexOne).checkBoolean()){
+						} else if (!first.checkBoolean()){
+							if (!second.checkBoolean()){
 								if (notCount%2==1){
 									proofExpression.setBoolean(false);
 								}else{
