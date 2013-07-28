@@ -188,7 +188,10 @@ public class Proof {
 	}
 	
 	public boolean checkingMP(Expression proofExpression, String[] split){
-		
+			//System.out.println(this.getLeft(split));
+			//System.out.println(this.getShorter(split).myLine);
+			System.out.println(this.getRight(split));
+			System.out.println(proofExpression.myLine);
 			if(this.getLeft(split).equals(this.getShorter(split).myLine) && this.getRight(split).equals(proofExpression.myLine)){
 				return true;
 			} else{
@@ -215,10 +218,14 @@ public class Proof {
 	public String getLeft(String [] split){
 
 		Expression Shorter= this.getShorter(split);
+		//System.out.println(Shorter.myLine);
 		Expression Longer = this.getLonger(split);
+		//System.out.println(Longer.myLine);
 		int firstIndex= Longer.myLine.indexOf(Shorter.myLine);
+		//System.out.println(firstIndex);
 		int shorterLength = Shorter.myLine.length();
-		return Longer.myLine.substring(1, firstIndex+shorterLength-1);
+		//System.out.println(shorterLength);
+		return Longer.myLine.substring(1, firstIndex+shorterLength);
 	}
 	
 	public String getRight(String [] split){
@@ -227,7 +234,7 @@ public class Proof {
 		Expression Longer = this.getLonger(split);
 		int firstIndex= Longer.myLine.indexOf(Shorter.myLine);
 		int shorterLength = Shorter.myLine.length();
-		return Longer.myLine.substring(shorterLength+2, Longer.myLine.length()-1);
+		return Longer.myLine.substring(firstIndex+shorterLength+2, Longer.myLine.length()-1);
 	}
 	
 	public Expression getShorter(String [] split){
