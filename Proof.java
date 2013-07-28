@@ -202,13 +202,19 @@ public class Proof {
 	
 	public boolean checkingMT(Expression proofExpression, String[] split){
 		Expression Shorter= this.getShorter(split);
+		System.out.println(Shorter.myLine);
 		Expression Longer = this.getLonger(split);
+		System.out.println(Longer.myLine);
 		String negRight = Shorter.myLine.replaceFirst("~", "");
+		System.out.println(negRight);
 		String negLeft = proofExpression.myLine.replaceFirst("~", "");
+		System.out.println(negLeft);
 		String compare = "("+negLeft+ "=>" + negRight+")";
+	
 		System.out.println(compare);
+		System.out.println(compare.equals(Longer.myLine));
 		//also check if right side of longer expression is the expression we want to set boolean to.
-		if(compare.equals(Longer)){
+		if(compare.equals(Longer.myLine)){
 			return true;
 		} else{
 			return false;
