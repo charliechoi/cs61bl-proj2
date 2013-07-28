@@ -295,12 +295,4 @@ public class Expression {
         return true;
   
     }
-    public static void main(String[] args) {
-        Expression p = new Expression("(a=>(~b)");
-        try {
-            p.validExpr("(a=>(~b)"); // TANYA RIGHT HERE
-        } catch (IllegalLineException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }
