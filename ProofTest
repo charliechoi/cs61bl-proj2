@@ -774,7 +774,7 @@ public class ProofTest extends TestCase {
          *  see after this method. Also, I'm not sure how \t looks depending on the
          *  computer but that's how the project wants us to do it.
          */
-        String testString = "1\tshow (~~p=>p)\n2\tassume ~~p\n3\tshow p\n3.1\tassume ~p\n3.2\tidentity (p=>p)\n";
+        String testString = "\n1\tshow (~~p=>p)\n2\tassume ~p\n3\tassume x\n4\tassume ~~p\n5\tshow p\n5.1\tassume ~p\n5.2\tidentit (p=>p)\n";
         
         assertEquals(soFar.toString(), testString);
         
@@ -787,7 +787,7 @@ public class ProofTest extends TestCase {
             2  assume ~~p
             3  show p
             3.1  assume ~p
-            3.2  identit (p=>p)
+            3.2  identity (p=>p)
             bad theorem name
             3.2  identity (p=>p)
             
