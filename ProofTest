@@ -9,21 +9,22 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("show (~~p=>p)");
 		} catch (IllegalLineException e1) {
-
+			
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-
+			
 			e1.printStackTrace();
 		}
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
         assertEquals(soFar.nextLineNumber(), "2");
+        
         try {
             soFar.extendProof("assume (~~p)"); // invalid, shouldn't have paren
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+        	succeededErrorHandling = true;
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -34,7 +35,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -45,7 +46,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -56,7 +57,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
         } catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -77,7 +78,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -88,7 +89,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -99,7 +100,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -110,7 +111,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -121,7 +122,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
         } catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -132,7 +133,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
         } catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -145,10 +146,10 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("assume ~~p");
 		} catch (IllegalLineException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
         assertTrue(soFar.isOK());
@@ -158,7 +159,7 @@ public class ProofTest extends TestCase {
             try {
 				soFar.extendProof("assume ~~p");
 			} catch (IllegalLineException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} // invalid, assume must follow show
         } catch (IllegalInferenceException e) {
@@ -172,10 +173,10 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("show p");
 		} catch (IllegalLineException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
         assertTrue(soFar.isOK());
@@ -184,10 +185,10 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("assume ~p");
 		} catch (IllegalLineException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
         assertTrue(soFar.isOK());
@@ -198,7 +199,7 @@ public class ProofTest extends TestCase {
             try {
 				soFar.extendProof("co 1 3.1 p");
 			} catch (IllegalLineException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} // invalid
             // i think it's illegalinference since the lines actually do exist
@@ -214,7 +215,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -226,7 +227,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -237,7 +238,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -248,7 +249,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -259,7 +260,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -270,7 +271,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
         } catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -281,7 +282,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
         } catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -292,7 +293,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
         } catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -303,7 +304,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
         } catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -314,7 +315,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
         } catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -323,10 +324,10 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("co 2 3.1 p");
 		} catch (IllegalLineException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
         assertTrue(soFar.isOK());
@@ -338,7 +339,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -349,7 +350,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succeededErrorHandling);
@@ -358,10 +359,10 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("ic 3 (~~p=>p)");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(soFar.isOK());
@@ -380,10 +381,10 @@ public class ProofTest extends TestCase {
 	public void testTheorems() {
         boolean succeededErrorHandling = false;
         TheoremSet ts = new TheoremSet();
-        Expression l = new Expression("(a=>(b=>(a&b)))");
-        Expression grr = new Expression("((~a&~b)=>~(a|b))");
-        ts.put("buildAnd", l);
-        ts.put("demorgan2", grr);
+        Expression buildAnd=new Expression("(a=>(b=>(a&b)))");
+        ts.put("buildAnd", buildAnd );
+        Expression demorgan2=new Expression( "((~a&~b)=>~(a|b))");
+        ts.put("demorgan2", demorgan2);
         Proof soFar = new Proof(ts);
         try {
         	soFar.extendProof("show ((p|q)=>(~p=>q))");
@@ -611,28 +612,28 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("show (p=>p)");
 		} catch (IllegalLineException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
         try {
 			soFar.extendProof("show (p=>p)");
 		} catch (IllegalLineException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
         try {
 			soFar.extendProof("assume p");
 		} catch (IllegalLineException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
         assertTrue(soFar.isOK());
@@ -640,10 +641,10 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("ic 2.1 (p=>p)");
 		} catch (IllegalLineException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
 
@@ -652,7 +653,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succededErrorHandling);
@@ -663,7 +664,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
         } catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(succededErrorHandling);
@@ -674,10 +675,10 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("repeat 2 (p=>p)");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         assertTrue(soFar.isOK());
@@ -699,73 +700,73 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("show (~~p=>p)");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         try {
 			soFar.extendProof("assume ~p");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} // ignored invalid input
         try {
 			soFar.extendProof("assume x");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}  // ignored invalid input
         try {
 			soFar.extendProof("assume ~~p");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         try {
 			soFar.extendProof("show p");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         try {
 			soFar.extendProof("assume ~p");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         try {
 			soFar.extendProof("identit (p=>p)");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} // ignored invalid input
         try {
 			soFar.extendProof("identity (p=>p)");
 		} catch (IllegalLineException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         
@@ -774,7 +775,7 @@ public class ProofTest extends TestCase {
          *  see after this method. Also, I'm not sure how \t looks depending on the
          *  computer but that's how the project wants us to do it.
          */
-        String testString = "\n1\tshow (~~p=>p)\n2\tassume ~p\n3\tassume x\n4\tassume ~~p\n5\tshow p\n5.1\tassume ~p\n5.2\tidentit (p=>p)\n";
+        String testString = "1\tshow (~~p=>p)\n2\tassume ~~p\n3\tshow p\n3.1\tassume ~p\n3.2\tidentity (p=>p)\n";
         
         assertEquals(soFar.toString(), testString);
         
@@ -787,7 +788,7 @@ public class ProofTest extends TestCase {
             2  assume ~~p
             3  show p
             3.1  assume ~p
-            3.2  identity (p=>p)
+            3.2  identit (p=>p)
             bad theorem name
             3.2  identity (p=>p)
             
@@ -801,3 +802,7 @@ public class ProofTest extends TestCase {
         */
     }
 }
+
+
+
+
