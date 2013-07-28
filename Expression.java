@@ -32,6 +32,22 @@ public class Expression {
 		}
 
 	}
+	
+	public void isOOK() throws IllegalLineException{
+		String copy=myLine;
+		int count1=0, count2=0;
+		for(int k=0;k<copy.length();k++){
+			if(copy.charAt(k)=='('){
+				count1++;	
+			}else if(copy.charAt(k)==')'){
+				count2++;
+			}
+		}
+		if(count1!=count2|(count1==0&&count2==0)){
+			throw new IllegalLineException("para error");
+		}
+	
+	}
 	public String aString(){
 		return myLine;
 	}
@@ -76,6 +92,9 @@ public class Expression {
 
 	public TreeNode expr(){
 		TreeNode a = exprTree(myLine);
+		if(a==null){
+			System.out.println("bad tree");
+		}
 		return a;
 	}
 	// Return the tree corresponding to the given arithmetic expression.
