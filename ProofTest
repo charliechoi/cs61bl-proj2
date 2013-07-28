@@ -1,88 +1,461 @@
-import static org.junit.Assert.*;
+import java.util.*;
 import junit.framework.TestCase;
-
-import org.junit.Test;
-
-
 public class ProofTest extends TestCase {
 
-  
-	TheoremSet check;
+    public void testGeneral() {
+        boolean succeededErrorHandling = false;
+        Proof soFar = new Proof(new TheoremSet());
+        assertEquals(soFar.nextLineNumber(), "1");
+        soFar.extendProof("show (~~p=>p)");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        assertEquals(soFar.nextLineNumber(), "2");
+        try {
+            soFar.extendProof("assume (~~p)"); // invalid, shouldn't have paren
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false; // reset
 
-	//testing isOkay and basic line number
-	public void testProof1(){
-		 Proof soFar = new Proof (check);
-		 String numba1=soFar.nextLineNumber ( );
-		 assertEquals(numba1 , "1");// checking line number
-		 System.out.print (numba1 + "\t");
-		 try{soFar.extendProof("show (q=>q)");
-		 }catch (IllegalLineException e) {
-         } catch (IllegalInferenceException e) {
-         }
-		 assertFalse(soFar.isComplete()); // checking isComplete
-		 String numba2=soFar.nextLineNumber ( );
-		 assertEquals(numba2, "2");//checking line number
-		 System.out.print (numba2 + "\t");
+        try {
+            soFar.extendProof("assume ~~p)"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
 
-		 try{soFar.extendProof("assume q");
-		 }catch (IllegalLineException e) {     
-         } catch (IllegalInferenceException e) {
-         }assertFalse(soFar.isComplete()); // checking isComplete
-         String numba3=soFar.nextLineNumber ( );
-		 assertEquals(numba3, "3"); //checking line number
-		 System.out.print (numba3 + "\t");
-
-		 try{soFar.extendProof("ic 2 (q=>q)");
-		 }catch (IllegalLineException e) {
-		 }catch (IllegalInferenceException e) {
-		 }assertTrue(soFar.isComplete()); // checking isComplete
-	}
-
-	public void testInvalidTest(){
-		Proof soFar = new Proof (check);
-		boolean error1= false, error2 =false, error3=false;
-
-		try{soFar.extendProof("show(q=>q)");
-		 }catch (IllegalLineException e) {
-            System.out.println (e.getMessage());
-            error1=true;
+        try {
+            soFar.extendProof("assume ~(~p)"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+        
+        try {
+            soFar.extendProof("assume ~p"); // invalid
         } catch (IllegalInferenceException e) {
-            System.out.println (e.getMessage());
-        }assertTrue(error1);           // catching IllegalLineException
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
 
-        try{soFar.extendProof("show (q=>q) p");
-		 }catch (IllegalLineException e) {
-           System.out.println (e.getMessage());
-           error2=true;
-       } catch (IllegalInferenceException e) {
-           System.out.println (e.getMessage());
-       }assertTrue(error2); // catching IllegalLineException
-       
-       try{soFar.extendProof("(q=>q)");
-		 }catch (IllegalLineException e) {
-          System.out.println (e.getMessage());
-          error3=true;
-      } catch (IllegalInferenceException e) {
-          System.out.println (e.getMessage());
-      }assertTrue(error3); 
-	}
-	/*
+        try {
+            soFar.extendProof("assum ~~p"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
 
-	public void testSubProof(){
-		try{soFar.extendProof("show (p=>(~p=>q))")
-	}catch (IllegalInferenceException e) {	
-	}catch (IllegalInferenceException e) {}
-		try{soFar.extendProof("show (p=>(~p=>q))")
-		}catch (IllegalInferenceException e) {	
-		}catch (IllegalInferenceException e) {}
-		 1  show (p=>(~p=>q))
-		 2  assume p
-		 3  show (~p=>q)
-		 3.1  assume ~p
-		 3.2  co 2 3.1 (~p=>q)
-		 4  ic 3 (p=>(~p=>q))
-*/
+        try {
+            soFar.extendProof("assume"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
 
+        try {
+            soFar.extendProof("assume ~"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("assume ~~p."); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("assume ~~p ~~p"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("assume x"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("assume (~~p=>p)"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+        
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        assertEquals(soFar.nextLineNumber(), "2");
+        
+        soFar.extendProof("assume ~~p");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+
+        try {
+            soFar.extendProof("assume ~~p"); // invalid, assume must follow show
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+        
+        
+        assertEquals(soFar.nextLineNumber(), "3");
+        soFar.extendProof("show p");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        assertEquals(soFar.nextLineNumber(), "3.1");
+        soFar.extendProof("assume ~p");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        assertEquals(soFar.nextLineNumber(), "3.2");
+
+        try {
+            soFar.extendProof("co 1 3.1 p"); // invalid
+            // i think it's illegalinference since the lines actually do exist
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("co 2.1 3.1 p"); // invalid
+            // illegalLine because 2.1 doesn't exist
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+
+        try {
+            soFar.extendProof("co 3.1 p"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("co p"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("co 3.1 2 p ."); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("assume p"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("co 2 3.1 q"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("mt 2 3.1 p"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("mp 2 3.1 p"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("ic 3 p"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("ic 3.1 p"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+        
+        soFar.extendProof("co 2 3.1 p");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        assertEquals(soFar.nextLineNumber(), "4");
+
+        try {
+            soFar.extendProof("ic (~~p=>p)"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("ic 3 ~~p=>p"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+        
+        soFar.extendProof("ic 3 (~~p=>p)");
+        assertTrue(soFar.isOK());
+        assertTrue(soFar.isComplete()); // done
+        
+        
+        /** 1	show (~~p=>p)
+            2	assume ~~p
+            3	show p
+            3.1	assume ~p
+            3.2	co 2 3.1 p
+            4	ic 3 (~~p=>p)
+        */
+    }
+    
+	public void testTheorems() {
+        boolean succeededErrorHandling = false;
+        TheoremSet ts = new TheoremSet();
+        ts.put("buildAnd, (a=>(b=>(a&b)))");
+        ts.put("demorgan2, ((~a&~b)=>~(a|b))");
+        Proof soFar = new Proof(ts);
+        soFar.extendProof("show ((p|q)=>(~p=>q))");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("assume (p|q");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("show (~p=>q");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("assume ~p");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("show q");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("assume ~q");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("buildAnd (~p=>(~q=>(~p&~q)))");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        assertEquals(soFar.nextLineNumber(), "3.2.3");
+        soFar.extendProof("mp 3.1 3.2.2 (~q=>(~p&~q))");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("mp 3.2.3 3.2.1 (~p&~q)");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        
+        try {
+            soFar.extendProof("demorgan2 ((~p|q)=>~(p|q))"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+        
+        try {
+            soFar.extendProof("demorgan2 ((~p|~q)=>~(p|q))"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("demorgan2 3.2.3 ((~p|~q)=>~(p|q))"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("demorgan2 3.2.3"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+        
+        
+        soFar.extendProof("demorgan2 ((~p&~q)=>~(p|q))");
+        assertEquals(soFar.nextLineNumber(), "3.2.6");
+        
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("mp 3.2.4 3.2.5 ~(p|q)");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("co 3.2.6 2 q");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        
+        // not sure if this is illegal inference or line exception
+        try {
+            soFar.extendProof("ic 3.2.7 (~p=>q)"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+        
+        
+        soFar.extendProof("ic 3.2 (~p=>q)");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("ic 3 ((p|q)=>(~p=>q))");
+        assertTrue(soFar.isOK());
+        assertTrue(soFar.isComplete());
+        
+        
+        /** This next proof uses two theorems: 
+            buildAnd (a=>(b=>(a&b)))
+            demorgan2 ((~a&~b)=>~(a|b))
+
+            1	show ((p|q)=>(~p=>q))
+            2	assume (p|q)
+            3	show (~p=>q)
+            3.1	assume ~p
+            3.2	show q
+            3.2.1	assume ~q
+            3.2.2	buildAnd (~p=>(~q=>(~p&~q)))
+            3.2.3	mp 3.1 3.2.2 (~q=>(~p&~q))
+            3.2.4	mp 3.2.3 3.2.1 (~p&~q)
+            3.2.5	demorgan2 ((~p&~q)=>~(p|q))
+            3.2.6	mp 3.2.4 3.2.5 ~(p|q)
+            3.2.7	co 3.2.6 2 q
+            3.3	ic 3.2 (~p=>q)
+            4	ic 3 ((p|q)=>(~p=>q))
+        */
+    }
+
+    public void testRepeat() {
+        TheoremSet ts = new TheoremSet();
+        Proof soFar = new Proof(ts);
+        boolean succededErrorHandling = false;
+        soFar.extendProof("show (p=>p)");
+        soFar.extendProof("show (p=>p)");
+        soFar.extendProof("assume p");
+        assertTrue(soFar.isOK());
+        assertFalse(soFar.isComplete());
+        soFar.extendProof("ic 2.1 (p=>p)");
+
+        try {
+            soFar.extendProof("repeat 2"); // invalid
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+
+        try {
+            soFar.extendProof("repeat 1 (p=>p)"); // invalid
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        }
+        assertTrue(succededErrorHandling);
+        succededErrorHandling = false;
+        
+        assertEquals(soFar.nextLineNumber(), "3");
+        
+        soFar.extendProof("repeat 2 (p=>p)");
+        assertTrue(soFar.isOK());
+        assertTrue(soFar.isComplete()); // done
+        
+        
+        /** 1 show (p=>p)
+            2 show (p=>p)
+            2.1 assume p
+            2.2 ic 2.1 (p=>p)
+            3 repeat 2 (p=>p)
+        */
+    }
+    
+    public void testToString() {
+        TheoremSet ts = new TheoremSet();
+        ts.put("identity", new Expression("(a=>a)"));
+        Proof soFar = new Proof(ts);
+        soFar.extendProof("show (~~p=>p)");
+        soFar.extendProof("assume ~p"); // ignored invalid input
+        soFar.extendProof("assume x");  // ignored invalid input
+        soFar.extendProof("assume ~~p");
+        soFar.extendProof("show p");
+        soFar.extendProof("assume ~p");
+        soFar.extendProof("identit (p=>p)"); // ignored invalid input
+        soFar.extendProof("identity (p=>p)");
+        
+        /** NOTE, double check this toString test, maybe rewrite toString()  or this
+         *  testString line accordingly. this returns the 2nd paragraph that you
+         *  see after this method. Also, I'm not sure how \t looks depending on the
+         *  computer but that's how the project wants us to do it.
+         */
+        String testString = "1\tshow (~~p=>p)\n2\tassume ~~p\n3\tshow p\n3.1\tassume ~p\n3.2\tidentity (p=>p)\n";
+        
+        assertEquals(soFar.toString(), testString);
+        
+        /** INPUT:
+            1  show (~~p=>p)
+            2  assume ~p
+            invalid assumption
+            2  assume x
+            invalid assumption
+            2  assume ~~p
+            3  show p
+            3.1  assume ~p
+            3.2  identit (p=>p)
+            bad theorem name
+            3.2  identity (p=>p)
+            
+
+            toString():
+            1  show (~~p=>p)
+            2  assume ~~p
+            3  show p
+            3.1  assume ~p
+            3.2  identity (p=>p)
+        */
+    }
 }
 
 
