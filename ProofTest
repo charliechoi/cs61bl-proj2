@@ -378,8 +378,10 @@ public class ProofTest extends TestCase {
 	public void testTheorems() {
         boolean succeededErrorHandling = false;
         TheoremSet ts = new TheoremSet();
-        ts.put("buildAnd, (a=>(b=>(a&b)))");
-        ts.put("demorgan2, ((~a&~b)=>~(a|b))");
+        Expression n = new Expression("a=>(b=>(a&b))");
+        Expression r = new Expression("((~a&~b)=>~(a|b))");
+        ts.put("buildAnd" ,n);
+        ts.put("demorgan2" , r);
         Proof soFar = new Proof(ts);
         soFar.extendProof("show ((p|q)=>(~p=>q))");
         assertTrue(soFar.isOK());
@@ -691,7 +693,6 @@ public class ProofTest extends TestCase {
         */
     }
 }
-
 
 
 
