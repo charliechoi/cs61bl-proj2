@@ -5,14 +5,9 @@ public class Expression {
     protected TreeNode myRoot;
     protected String myLine="";
     protected boolean somethin = false;
-    public Expression(String line) {
+    public Expression(String line) throws IllegalLineException {
         myLine=line;
-        try{
-        	validExpr(myLine);
-        }catch(IllegalLineException e){
-        	System.out.println(e.getMessage());
-        }
-
+        validExpr(myLine);
     }
     
     protected static class TreeNode {
@@ -141,16 +136,16 @@ public class Expression {
                 addNot=false;
                 opnd1=opnd1.substring(1);
             }
-            System.out.println ("expression = " + expr);
-            System.out.println ("operand 1 = " + opnd1);
-            System.out.println ("operator = " + op);
-            System.out.println ("operand 2 = " + opnd2);
-            System.out.println ( );
+           // System.out.println ("expression = " + expr);
+            //System.out.println ("operand 1 = " + opnd1);
+            //System.out.println ("operator = " + op);
+            //System.out.println ("operand 2 = " + opnd2);
+            //System.out.println ( );
             return new TreeNode(op,exprTree(opnd1),exprTree(opnd2));
         }
     }
 
-    public void validExpr(String s) throws IllegalLineException {
+    public static void validExpr(String s) throws IllegalLineException {
         // this is a recursive method to check if a String is a valid expr
         Set<Character> ops = new HashSet<Character>();
         ops.add('=');
@@ -165,7 +160,7 @@ public class Expression {
         if (s.charAt(0) != '(') {
             if (validOps(s) != 0)
                 throw new IllegalLineException("bad expr: no valid opening parens");
-            
+            	
             if (s.charAt(0) != '~' && !Character.isLetter(s.charAt(0)))
                 throw new IllegalLineException("bad expr: no valid opening parens");
             while (s.charAt(0) == '~') { // remove the 'not's since it doesn't affect expression validity
@@ -187,12 +182,14 @@ public class Expression {
         // we just finished '~' and variable checking. move on to '(' nesting checking
         // following only runs if first char is '('
         
-        if (s.charAt(s.length() - 1) != ')')
+        if (s.charAt(s.length() - 1) != ')'){
             throw new IllegalLineException("bad expr: invalid outer nesting");
+        }
         s = s.substring(1, s.length() - 1); // remove outer parens
 
-        if (validOps(s) == 0)
+        if (validOps(s) == 0){
             throw new IllegalLineException("bad expr: no valid operator found");
+        }
         int opIndex = validOps(s); // throws error if there is no valid Operator, why else would we need parens
         String left = s.substring(0, opIndex);
         String right;
@@ -206,7 +203,7 @@ public class Expression {
         // (~a=>(~b=>~(a|b)))
     }
 
-    private int validOps(String s) throws IllegalLineException {
+    private static int validOps(String s) throws IllegalLineException {
         // merely checks to see if there exists ONE operator at nesting 0.
         // returns index of the operator.
         Set<Character> ops = new HashSet<Character>();
@@ -217,30 +214,39 @@ public class Expression {
         int validOpCount = 0;   // cannot have more than 1
         int opIndex = 0;
 
-        if (s == "")
+        if (s == ""){
             throw new IllegalLineException("bad expr: empty parens");
+        }
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(')
+            if (s.charAt(i) == '('){
                 nesting++;
-            if (s.charAt(i) == ')')
+            }
+            if (s.charAt(i) == ')'){
                 nesting--;
-            if (nesting < 0)
+            }
+            if (nesting < 0){
                 throw new IllegalLineException("bad expr: encountered early ')'");
+            }
             if (ops.contains(s.charAt(i)) && nesting == 0) {
-                if (i == 0)     // operand found in beginning
+                if (i == 0) {    // operand found in beginning
                     throw new IllegalLineException("bad expr: no left operand");
-                if (s.length() == i + 1) // end of iteration
+                }
+                if (s.length() == i + 1){ // end of iteration
                     throw new IllegalLineException("bad expr: no right operand");
-                if (s.charAt(i+1) != '>' && s.charAt(i) == '=')
+                }
+                if (s.charAt(i+1) != '>' && s.charAt(i) == '='){
                     throw new IllegalLineException("bad expr: invalid operator");
-                if (s.charAt(i) == '=' && s.length() == i + 2)
+                }
+                if (s.charAt(i) == '=' && s.length() == i + 2){
                     throw new IllegalLineException("bad expr: no right operand");
+                }
                 validOpCount++;
                 opIndex = i;
             }
         }
-        if (validOpCount > 1)
+        if (validOpCount > 1){
             throw new IllegalLineException("bad expr: too many operators");
+        }
         return opIndex;
     }
 
@@ -250,7 +256,7 @@ public class Expression {
         boolean compareTruth=false;
 		try {
 			treeProof = exprTree(myLine);
-			TreeNode treeCheck = exprTree( Check.aString());
+			TreeNode treeCheck = exprTree(Check.aString());
 			HashMap subTree = new HashMap();
 	        compareTruth = inOrder(treeProof, treeCheck, subTree);
 		} catch (IllegalLineException e) {
