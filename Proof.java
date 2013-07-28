@@ -46,9 +46,20 @@ public class Proof {
 				//an attempt to figure out if expression requires false or true when setting boolean at the end.
 				int notCount=0;
 				String temp = split[split.length-1];
-				temp.replace("~","");
-				notCount = split[split.length-1].length() - temp.length();
+				//System.out.println(temp);
+				while (temp.contains("~")){
+					int index = temp.indexOf("~");
+					
+					if (index==0){
+						temp = temp.substring(1);
+					} else {
+						temp = temp.substring(0,index) + temp.substring(index+1);
+					}
+				}
 				
+				//System.out.println(temp);
+				notCount = split[split.length-1].length() - temp.length();
+				//System.out.println(notCount);
 				//mp
 				if (split[0].equals("mp") && split.length == 4){
 					int indexOne = LineNumCollection.indexOf(split[1]);
@@ -104,11 +115,13 @@ public class Proof {
 					
 				//assume	
 				} else if (split[0].equals("assume") && split.length==2){
+					//System.out.println(notCount);
 					if (notCount%2==1){
 						proofExpression.setBoolean(false);
 					}else{
 						proofExpression.setBoolean(true);
 					}
+					//System.out.println(proofExpression.checkBoolean());
 					expressionList.add(proofExpression);
 					number.NewLine();
 					
@@ -138,7 +151,10 @@ public class Proof {
 					//get the corresponding expressions
 					Expression first = expressionList.get(indexOne);
 					Expression second = expressionList.get(indexTwo);
-					
+					//System.out.println(first.myLine);
+					//System.out.println(second.myLine);
+					//System.out.println(first.checkBoolean());
+					//System.out.println(second.checkBoolean());
 					if(this.checkingCO(proofExpression)){
 						if(first.checkBoolean()!=second.checkBoolean()){
 							proofExpression.setBoolean(true);
@@ -148,8 +164,9 @@ public class Proof {
 							throw new IllegalInferenceException("co error");
 						} 
 					} else {
-						throw new IllegalInferenceException("co error");
+						throw new IllegalInferenceException("co check error");
 					}
+					
 				
 				//ic	
 				}else if (split[0].equals("ic")&&split.length==3){
@@ -202,17 +219,17 @@ public class Proof {
 	
 	public boolean checkingMT(Expression proofExpression, String[] split){
 		Expression Shorter= this.getShorter(split);
-		System.out.println(Shorter.myLine);
+		//System.out.println(Shorter.myLine);
 		Expression Longer = this.getLonger(split);
-		System.out.println(Longer.myLine);
+		//System.out.println(Longer.myLine);
 		String negRight = Shorter.myLine.replaceFirst("~", "");
-		System.out.println(negRight);
+		//System.out.println(negRight);
 		String negLeft = proofExpression.myLine.replaceFirst("~", "");
-		System.out.println(negLeft);
+		//System.out.println(negLeft);
 		String compare = "("+negLeft+ "=>" + negRight+")";
 	
-		System.out.println(compare);
-		System.out.println(compare.equals(Longer.myLine));
+		//System.out.println(compare);
+		//System.out.println(compare.equals(Longer.myLine));
 		//also check if right side of longer expression is the expression we want to set boolean to.
 		if(compare.equals(Longer.myLine)){
 			return true;
@@ -351,7 +368,9 @@ public class Proof {
 	}
 	
 	public boolean checkingCO(Expression proofExpression){
-		if(proofExpression.equals(showStack.peek())){
+		//System.out.println(proofExpression.myLine);
+		//System.out.println(showStack.peek().myLine);
+		if(proofExpression.myLine.equals(showStack.peek().myLine)){
 			return true;
 		} else{
 			return false;
@@ -367,5 +386,7 @@ public class Proof {
 		}
 	}
 }
+	
+	
 	
 
