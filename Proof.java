@@ -30,7 +30,6 @@ public class Proof {
 		// if the reason is the name of the theorem, access the hashmap of inputted theorem names and the corresponding expression.
 		// then check if the input expression MATCHES (create another method or class) the theorem expression.
 		
-		//add to proof collection for accessing later.
 		if (this.isOK()){
 			
 			if (x.equals("print")){
