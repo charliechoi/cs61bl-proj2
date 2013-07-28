@@ -9,10 +9,10 @@ public class ProofTest extends TestCase {
         try {
 			soFar.extendProof("show (~~p=>p)");
 		} catch (IllegalLineException e1) {
-			
+
 			e1.printStackTrace();
 		} catch (IllegalInferenceException e1) {
-			
+
 			e1.printStackTrace();
 		}
         assertTrue(soFar.isOK());
@@ -380,8 +380,10 @@ public class ProofTest extends TestCase {
 	public void testTheorems() {
         boolean succeededErrorHandling = false;
         TheoremSet ts = new TheoremSet();
-        ts.put("buildAnd, (a=>(b=>(a&b)))");
-        ts.put("demorgan2, ((~a&~b)=>~(a|b))");
+        Expression l = new Expression("(a=>(b=>(a&b)))");
+        Expression grr = new Expression("((~a&~b)=>~(a|b))");
+        ts.put("buildAnd", l);
+        ts.put("demorgan2", grr);
         Proof soFar = new Proof(ts);
         try {
         	soFar.extendProof("show ((p|q)=>(~p=>q))");
@@ -799,8 +801,3 @@ public class ProofTest extends TestCase {
         */
     }
 }
-
-
-
-
-
