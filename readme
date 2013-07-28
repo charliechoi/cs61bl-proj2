@@ -1,0 +1,40 @@
+
+PART I- ProofTest.java
+  "To test the functionality of our Proof class, we essentially ran several simulations as JUnit tests in ProofTest.java 
+to observe the behavior of our methods. 
+	In order to encompass all of the potential error-raising cases, our first simulation tests 
+1) all of the line syntax errors we could think of, such as misspellings, bad theorem names, parentheses errors, nonexistent 
+variables, and incorrect operator usage, 2) isComplete() and isOK() throughout a simple 6 line proof that includes 1 layer of 
+nesting, 3) for both correct and incorrect usages of show and assume, 4) for invalid usages of mp mt co and ic, and 
+5) for garbage line numbers, inaccessible line numbers, and accessible although incorrectly used line numbers.
+
+	Our 2nd simulation tests 1) primarily, accurate usage of theorems, and for incorrect usages of them, including 
+garbage/inaccessible line numbers, incorrect inference through a theorem, and theorem usage syntax, 2) isOK(), 
+isComplete(), and general functionality of a longer 10+ line proof with 3 layers of nesting, 3) accurate functionality 
+of of the built-in reasons.
+
+	Our 3rd simulation tests for proper functionality of the repeat reason, checking for errors in garbage/inaccessible 
+line numbers, invalid syntax (such as # of arguments), and invalid repeat inferences.
+
+	Our 4th simulation tests for proper functionality of the toString() method by simulating  lines of input in a 
+2-layer nested proof, of which 3 are invalid inputs that are ignored. The toString() method should properly return the 
+expected string, which does not include the ignored lines, with proper line numbering, proper tabbing, and without the
+ pending input-line."
+ 
+ PART II-ExpressionTest.java
+ Same as testing the Proof class, we wrote several JUnit test cases in ExpressionTest.java to detect bugs in the Expression.java.
+ 	In order to test the class in the most comprehensive and organized way, we split the test cases into two major parts. First is 
+ to test the validity of input lines and to detect and misconscructions on the user end. Second is to test its major methods such as aString(), 
+ expr(), print() and compare().
+	Our first part of tests encompass as many mis-spelled and mis-constructed scenarios as we could think of. The part includes testvalidExpr1, 
+testvalidExpr2, testvalidExpr3. We dealt with illegal input such as wrong number of parenthesis, mis-placed operands and alphabets, non-existing operands.
+When constructing an Expression object, the constructor would catch IllegalLineException and reflects on the console window. We assert that all tests passed 
+through by asserting a boolean inside the catch block.
+	Our second part tests for the functionality of different methods. Since our primary method compare(), depends on methods such as aString(), expr(), by 
+testing each method, we can ensure the functionality of compare(). 1) In testString(), the test is straightforward. Assert true if aString() successfully turn 
+Expression(input) into a String. 2)In testPrint we check if the method builds an expression Tree successfully and we ensure the tree's validity by printing out 
+the tree in the console window. Finally testCompare compares all inputs to check if they are structurally the same. We construct different Expressions and call
+upon compare() method with an assertTrue method. The test should be able to recognize different expressions or alphabets with same structure and return false if 
+there is any difference. For example, expression such as "(a|(b=>(a|b)))" should be structurally the same as "((x|y)|((x&b)=>((x|y)|(x&b))))".
+ 
+ 
