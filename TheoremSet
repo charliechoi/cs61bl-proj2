@@ -2,7 +2,8 @@ import java.util.*;
 
 
 public class TheoremSet {
-  protected HashMap Theorem = new HashMap();
+  protected Map<String,Expression> Theorem = new HashMap<String Expression>;
+  
 	
 	public TheoremSet ( ) {
 		
