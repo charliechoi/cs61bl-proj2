@@ -33,7 +33,10 @@ public class ProofTest extends TestCase {
             soFar.extendProof("assume ~~p)"); // invalid
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
-        }
+        } catch (IllegalInferenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         assertTrue(succeededErrorHandling);
         succeededErrorHandling = false;
 
@@ -64,8 +67,7 @@ public class ProofTest extends TestCase {
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
         } catch (IllegalInferenceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+        	 succeededErrorHandling = true;
 		}
         assertTrue(succeededErrorHandling);
         succeededErrorHandling = false;
@@ -378,37 +380,98 @@ public class ProofTest extends TestCase {
 	public void testTheorems() {
         boolean succeededErrorHandling = false;
         TheoremSet ts = new TheoremSet();
-        Expression n = new Expression("a=>(b=>(a&b))");
-        Expression r = new Expression("((~a&~b)=>~(a|b))");
-        ts.put("buildAnd" ,n);
-        ts.put("demorgan2" , r);
+        ts.put("buildAnd, (a=>(b=>(a&b)))");
+        ts.put("demorgan2, ((~a&~b)=>~(a|b))");
         Proof soFar = new Proof(ts);
-        soFar.extendProof("show ((p|q)=>(~p=>q))");
+        try {
+        	soFar.extendProof("show ((p|q)=>(~p=>q))");
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalInferenceException e) {
+        	 succeededErrorHandling = true;
+		}
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("assume (p|q");
+        
+        try {
+        	soFar.extendProof("assume (p|q");
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalInferenceException e) {
+        	 succeededErrorHandling = true;
+		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("show (~p=>q");
+        try {
+        	soFar.extendProof("show (~p=>q");
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalInferenceException e) {
+        	 succeededErrorHandling = true;
+		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("assume ~p");
+        try {
+        	soFar.extendProof("assume ~p");
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalInferenceException e) {
+        	 succeededErrorHandling = true;
+		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("show q");
+        try {
+        	soFar.extendProof("show q");
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalInferenceException e) {
+        	 succeededErrorHandling = true;
+		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("assume ~q");
+        try {
+        	soFar.extendProof("assume ~q");
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalInferenceException e) {
+        	 succeededErrorHandling = true;
+		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("buildAnd (~p=>(~q=>(~p&~q)))");
+        try {
+        	soFar.extendProof("buildAnd (~p=>(~q=>(~p&~q)))");
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalInferenceException e) {
+        	 succeededErrorHandling = true;
+		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
         assertEquals(soFar.nextLineNumber(), "3.2.3");
-        soFar.extendProof("mp 3.1 3.2.2 (~q=>(~p&~q))");
+        try {
+        	soFar.extendProof("mp 3.1 3.2.2 (~q=>(~p&~q))");
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalInferenceException e) {
+        	 succeededErrorHandling = true;
+		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("mp 3.2.3 3.2.1 (~p&~q)");
+        try {
+        	soFar.extendProof("mp 3.2.3 3.2.1 (~p&~q)");
+        } catch (IllegalLineException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalInferenceException e) {
+        	 succeededErrorHandling = true;
+		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
         
@@ -416,7 +479,9 @@ public class ProofTest extends TestCase {
             soFar.extendProof("demorgan2 ((~p|q)=>~(p|q))"); // invalid
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
-        }
+        } catch (IllegalLineException e) {
+       	 succeededErrorHandling = true;
+		}
         assertTrue(succeededErrorHandling);
         succeededErrorHandling = false;
         
@@ -424,7 +489,9 @@ public class ProofTest extends TestCase {
             soFar.extendProof("demorgan2 ((~p|~q)=>~(p|q))"); // invalid
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
-        }
+        } catch (IllegalLineException e) {
+          	 succeededErrorHandling = true;
+   		}
         assertTrue(succeededErrorHandling);
         succeededErrorHandling = false;
 
@@ -432,7 +499,9 @@ public class ProofTest extends TestCase {
             soFar.extendProof("demorgan2 3.2.3 ((~p|~q)=>~(p|q))"); // invalid
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
-        }
+        } catch (IllegalInferenceException e) {
+          	 succeededErrorHandling = true;
+   		}
         assertTrue(succeededErrorHandling);
         succeededErrorHandling = false;
 
@@ -440,20 +509,42 @@ public class ProofTest extends TestCase {
             soFar.extendProof("demorgan2 3.2.3"); // invalid
         } catch (IllegalLineException e) {
             succeededErrorHandling = true;
-        }
+        } catch (IllegalInferenceException e) {
+         	 succeededErrorHandling = true;
+  		}
         assertTrue(succeededErrorHandling);
         succeededErrorHandling = false;
         
-        
-        soFar.extendProof("demorgan2 ((~p&~q)=>~(p|q))");
+        try {
+        	 soFar.extendProof("demorgan2 ((~p&~q)=>~(p|q))");
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalLineException e) {
+         	 succeededErrorHandling = true;
+  		}
+       
         assertEquals(soFar.nextLineNumber(), "3.2.6");
         
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("mp 3.2.4 3.2.5 ~(p|q)");
+        try {
+        	soFar.extendProof("mp 3.2.4 3.2.5 ~(p|q)");
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalLineException e) {
+         	 succeededErrorHandling = true;
+  		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("co 3.2.6 2 q");
+        try {
+        	soFar.extendProof("co 3.2.6 2 q");
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalLineException e) {
+         	 succeededErrorHandling = true;
+  		}
+        
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
         
@@ -462,15 +553,30 @@ public class ProofTest extends TestCase {
             soFar.extendProof("ic 3.2.7 (~p=>q)"); // invalid
         } catch (IllegalInferenceException e) {
             succeededErrorHandling = true;
-        }
+        } catch (IllegalLineException e) {
+         	 succeededErrorHandling = true;
+  		}
         assertTrue(succeededErrorHandling);
         succeededErrorHandling = false;
         
+        try {
+        	soFar.extendProof("ic 3.2 (~p=>q)"); 
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalLineException e) {
+         	 succeededErrorHandling = true;
+  		}
         
-        soFar.extendProof("ic 3.2 (~p=>q)");
         assertTrue(soFar.isOK());
         assertFalse(soFar.isComplete());
-        soFar.extendProof("ic 3 ((p|q)=>(~p=>q))");
+        try {
+        	soFar.extendProof("ic 3 ((p|q)=>(~p=>q))"); 
+        } catch (IllegalInferenceException e) {
+            succeededErrorHandling = true;
+        } catch (IllegalLineException e) {
+         	 succeededErrorHandling = true;
+  		}
+        
         assertTrue(soFar.isOK());
         assertTrue(soFar.isComplete());
         
@@ -693,6 +799,7 @@ public class ProofTest extends TestCase {
         */
     }
 }
+
 
 
 
