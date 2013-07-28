@@ -32,16 +32,8 @@ public class Proof {
 		
 		//add to proof collection for accessing later.
 		if (this.isOK()){
-				Queue<String> LineQueueCopy = LineQueue;
-				Queue<String> proofQueueCopy = proofQueue;
-			// update LineNum for not this line of proof but next line.
-			
 			if (x.equals("print")){
-				
-				while(!proofQueue.isEmpty()){
-					System.out.println(LineQueueCopy.remove()+"		"+ proofQueueCopy.remove());		
-				}
-				
+				System.out.print(toString());
 			} else {
 				//update line repository
 				LineQueue.add(number.get());
@@ -66,7 +58,7 @@ public class Proof {
 					Expression second = expressionList.get(indexTwo);
 					
 					if (!this.checkingMP(proofExpression, split)){
-						throw new IllegalInferenceException("mp error");
+						throw new IllegalInferenceException("mp checking error");
 					} else {
 						if (first.checkBoolean()){
 							if(second.checkBoolean()){
@@ -124,7 +116,7 @@ public class Proof {
 				}else if (split[0].equals("mt") && split.length==4){
 				
 					if (!this.checkingMT(proofExpression, split)){
-						throw new IllegalInferenceException("mt error");
+						throw new IllegalInferenceException("mt check error");
 					} else {
 						if (this.getLonger(split).checkBoolean()==true){
 							if (notCount%2==1){
@@ -177,7 +169,14 @@ public class Proof {
 	
 
 	public String toString ( ) {
-		return "";
+		Queue<String> LineQueueCopy = LineQueue;
+		Queue<String> proofQueueCopy = proofQueue;
+		String print = "" +"\n";
+	// update LineNum for not this line of proof but next line.
+		while(!proofQueue.isEmpty()){
+			print = print + LineQueueCopy.remove()+"	"+ proofQueueCopy.remove() +"\n";		
+		}
+		return print;
 	}
 
 	public boolean isComplete ( ) {
@@ -199,10 +198,14 @@ public class Proof {
 		}
 	
 	public boolean checkingMT(Expression proofExpression, String[] split){
-		String negLeft = "~"+this.getLeft(split);
-		String negRight = "~"+this.getRight(split);
+		Expression Shorter= this.getShorter(split);
+		Expression Longer = this.getLonger(split);
+		String negRight = Shorter.myLine.replaceFirst("~", "");
+		String negLeft = proofExpression.myLine.replaceFirst("~", "");
+		String compare = "("+negLeft+ "=>" + negRight+")";
+		System.out.println(compare);
 		//also check if right side of longer expression is the expression we want to set boolean to.
-		if(negRight.equals(this.getShorter(split).myLine) && negLeft.equals(proofExpression.myLine)){
+		if(compare.equals(Longer)){
 			return true;
 		} else{
 			return false;
