@@ -4,14 +4,15 @@ import java.io.*;
 public class Proof {
 	
 	private Queue<String> proofQueue = new LinkedList<String>();
-	private Queue<LineNumber> LineQueue = new LinkedList<LineNumber>();
+	private Queue<String> LineQueue = new LinkedList<String>();
 	private ArrayList<String> LineNumCollection = new ArrayList<String>();
 	private LineNumber number = new LineNumber();
 	private ArrayList<Expression> expressionList = new ArrayList<Expression>();
 	private Stack<Expression> showStack = new Stack<Expression>();
+	private TheoremSet theorem = new TheoremSet();
 	
 	public Proof (TheoremSet theorems) {
-		
+		theorem = theorems;
 	}
 
 	public String nextLineNumber ( ) {
@@ -31,22 +32,19 @@ public class Proof {
 		
 		//add to proof collection for accessing later.
 		if (this.isOK()){
-				Queue<LineNumber> LineQueueCopy = LineQueue;
+				Queue<String> LineQueueCopy = LineQueue;
 				Queue<String> proofQueueCopy = proofQueue;
 			// update LineNum for not this line of proof but next line.
 			
 			if (x.equals("print")){
-				while(!LineQueueCopy.isEmpty()){
-					
-					System.out.println(LineQueueCopy.remove().get()+" ");
-				}
+				
 				while(!proofQueue.isEmpty()){
-					
-					System.out.print(proofQueueCopy.remove());
+					System.out.println(LineQueueCopy.remove()+"		"+ proofQueueCopy.remove());		
 				}
+				
 			} else {
 				//update line repository
-				LineQueue.add(number);
+				LineQueue.add(number.get());
 				//update proof repository
 				proofQueue.add(x);
 				//split reason from line numbers from proof.
@@ -81,7 +79,6 @@ public class Proof {
 								expressionList.add(proofExpression);
 								//update line number and add boolean to show if pertinent.
 								this.update(proofExpression);
-								
 							} else {
 								throw new IllegalInferenceException("mp error");
 							}
@@ -97,8 +94,7 @@ public class Proof {
 								this.update(proofExpression);
 							} else{
 								throw new IllegalInferenceException("mp error");
-							}
-							
+							}	
 						} else{
 							throw new IllegalInferenceException("mp error");
 						}
@@ -126,15 +122,8 @@ public class Proof {
 					
 				//mt	
 				}else if (split[0].equals("mt") && split.length==4){
-					//take index of line numbers specified by proof, which also should be the index of the corresponding proof stored in expressionList
-					int indexOne = LineNumCollection.indexOf(split[1]);
-					int indexTwo = LineNumCollection.indexOf(split[2]);
-					//get the corresponding expressions
-					Expression first = expressionList.get(indexOne);
-					Expression second = expressionList.get(indexTwo);
-					// a boolean to determine if the expressions above are related to each other, as in if one object is a sub-expression of the other.
-						
-					if (this.checkingMT(proofExpression, split)){
+				
+					if (!this.checkingMT(proofExpression, split)){
 						throw new IllegalInferenceException("mt error");
 					} else {
 						if (this.getLonger(split).checkBoolean()==true){
@@ -152,7 +141,25 @@ public class Proof {
 					
 				//co
 				} else if (split[0].equals("co") && split.length==4){
+					int indexOne = LineNumCollection.indexOf(split[1]);
+					int indexTwo = LineNumCollection.indexOf(split[2]);
+					//get the corresponding expressions
+					Expression first = expressionList.get(indexOne);
+					Expression second = expressionList.get(indexTwo);
 					
+					if(this.checkingCO(proofExpression)){
+						if(first.checkBoolean()!=second.checkBoolean()){
+							proofExpression.setBoolean(true);
+							expressionList.add(proofExpression);
+							this.update(proofExpression);
+						} else {
+							throw new IllegalInferenceException("co error");
+						} 
+					} else {
+						throw new IllegalInferenceException("co error");
+					}
+				
+				//ic	
 				}else if (split[0].equals("ic")&&split.length==3){
 					if(this.ic(split[2], split)){
 						expressionList.add(proofExpression);
@@ -193,7 +200,7 @@ public class Proof {
 	
 	public boolean checkingMT(Expression proofExpression, String[] split){
 		String negLeft = "~"+this.getLeft(split);
-		String negRight = "~"+this.getLeft(split);
+		String negRight = "~"+this.getRight(split);
 		//also check if right side of longer expression is the expression we want to set boolean to.
 		if(negRight.equals(this.getShorter(split).myLine) && negLeft.equals(proofExpression.myLine)){
 			return true;
@@ -203,30 +210,21 @@ public class Proof {
 	}
 	
 	public String getLeft(String [] split){
-		//take index of line numbers specified by proof, which also should be the index of the corresponding proof stored in expressionList
-		int indexOne = LineNumCollection.indexOf(split[1]);
-		int indexTwo = LineNumCollection.indexOf(split[2]);
-		//get the corresponding expressions
-		Expression first = expressionList.get(indexOne);
-		Expression second = expressionList.get(indexTwo);
-		//find out which expression is larger, and see if the shorter one is inside the longer one.
+
 		Expression Shorter= this.getShorter(split);
-		int firstIndex= first.myLine.indexOf(Shorter.myLine);
+		Expression Longer = this.getLonger(split);
+		int firstIndex= Longer.myLine.indexOf(Shorter.myLine);
 		int shorterLength = Shorter.myLine.length();
-		return first.myLine.substring(1, firstIndex+shorterLength-1);
+		return Longer.myLine.substring(1, firstIndex+shorterLength-1);
 	}
 	
 	public String getRight(String [] split){
-		//take index of line numbers specified by proof, which also should be the index of the corresponding proof stored in expressionList
-		int indexOne = LineNumCollection.indexOf(split[1]);
-		int indexTwo = LineNumCollection.indexOf(split[2]);
-		//get the corresponding expressions
-		Expression first = expressionList.get(indexOne);
-		Expression second = expressionList.get(indexTwo);		
+	
 		Expression Shorter = this.getShorter(split);
-		int firstIndex= first.myLine.indexOf(Shorter.myLine);
+		Expression Longer = this.getLonger(split);
+		int firstIndex= Longer.myLine.indexOf(Shorter.myLine);
 		int shorterLength = Shorter.myLine.length();
-		return first.myLine.substring(shorterLength+2, first.myLine.length()-1);
+		return Longer.myLine.substring(shorterLength+2, Longer.myLine.length()-1);
 	}
 	
 	public Expression getShorter(String [] split){
@@ -334,6 +332,14 @@ public class Proof {
 			}
 		}
 		return true;
+	}
+	
+	public boolean checkingCO(Expression proofExpression){
+		if(proofExpression.equals(showStack.peek())){
+			return true;
+		} else{
+			return false;
+		}
 	}
 	
 	// check if index of expression corresponds to correct line number. will be called everytime in extendproof.
