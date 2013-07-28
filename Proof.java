@@ -133,26 +133,31 @@ public class Proof {
 					Expression first = expressionList.get(indexOne);
 					Expression second = expressionList.get(indexTwo);
 					// a boolean to determine if the expressions above are related to each other, as in if one object is a sub-expression of the other.
-					
-						if (this.checkingMT(proofExpression, split)){
-							throw new IllegalInferenceException("mt error");
-						} else {
-							if (this.getLonger(split).checkBoolean()==true){
-								if (notCount%2==1){
-									proofExpression.setBoolean(false);
-								}else{
-									proofExpression.setBoolean(true);
-								}
-								expressionList.add(proofExpression);
-								this.update(proofExpression);
-							} else {
-								throw new IllegalInferenceException("mt error");
+						
+					if (this.checkingMT(proofExpression, split)){
+						throw new IllegalInferenceException("mt error");
+					} else {
+						if (this.getLonger(split).checkBoolean()==true){
+							if (notCount%2==1){
+								proofExpression.setBoolean(false);
+							}else{
+								proofExpression.setBoolean(true);
 							}
+							expressionList.add(proofExpression);
+							this.update(proofExpression);
+						} else {
+							throw new IllegalInferenceException("mt error");
 						}
+					}
 					
 				//co
 				} else if (split[0].equals("co") && split.length==4){
 					
+				}else if (split[0].equals("ic")&&split.length==3){
+					if(this.ic(split[2], split)){
+						expressionList.add(proofExpression);
+						this.update(proofExpression);
+					}
 				}
 					
 			
@@ -169,7 +174,11 @@ public class Proof {
 	}
 
 	public boolean isComplete ( ) {
-		return true;
+		if(showStack.empty()==true){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	public boolean checkingMP(Expression proofExpression, String[] split){
@@ -191,51 +200,6 @@ public class Proof {
 		} else{
 			return false;
 		}
-	}
-	public boolean ic(String s,String [] split){
-		int indexOne = LineNumCollection.indexOf(split[1]);
-		String sub = expressionList.get(indexOne).aString();
-		String temper = s.replaceFirst(sub, "");
-		String first ="";
-		String operand ="";
-		String second ="";
-		if (temper.substring(0,1).equals("(")){
-			first = sub;
-			if (temper.substring(1,2).equals("=")){
-				operand = "=>";
-			}else{
-				operand = temper.substring(1,2);
-			}
-			String temp2 = sub.replaceFirst(operand, "");
-			second = temp2.substring(1,temp2.length()-2);
-				
-			
-		}else{
-			second = sub;
-			if (temper.substring(temper.length()-2,temper.length()-1).equals("=")){
-				operand = "=>";
-			}else{
-				operand = temper.substring(temper.length()-2,temper.length()-1);
-			}
-			String temp2 = operand + sub;
-			String temp3 = s.replaceFirst(temp2, "");
-			first = temp3.replaceFirst("(", "");
-			
-		}
-		int indexLeft = LineNumCollection.indexOf(second);
-		int indexRight = LineNumCollection.indexOf(first);
-		Expression lefty = expressionList.get(indexLeft);
-		Expression righty = expressionList.get(indexRight);
-		if (operand.equals("=>")||operand.equals("|")){
-			if (lefty.checkBoolean()==false && righty.checkBoolean()==false){
-				return false;
-			}
-		}else{
-			if (lefty.checkBoolean() == false || righty.checkBoolean() ==false){
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	public String getLeft(String [] split){
@@ -326,18 +290,55 @@ public class Proof {
 		}
 	}
 	
-	public boolean isComplete ( ) {
-		if(showStack.empty()==true){
-			return true;
+	public boolean ic(String s,String [] split){
+		int indexOne = LineNumCollection.indexOf(split[1]);
+		String sub = expressionList.get(indexOne).aString();
+		String temper = s.replaceFirst(sub, "");
+		String first ="";
+		String operand ="";
+		String second ="";
+		if (temper.substring(0,1).equals("(")){
+			first = sub;
+			if (temper.substring(1,2).equals("=")){
+				operand = "=>";
+			}else{
+				operand = temper.substring(1,2);
+			}
+			String temp2 = sub.replaceFirst(operand, "");
+			second = temp2.substring(1,temp2.length()-2);
+
+
 		}else{
-			return false;
+			second = sub;
+			if (temper.substring(temper.length()-2,temper.length()-1).equals("=")){
+				operand = "=>";
+			}else{
+				operand = temper.substring(temper.length()-2,temper.length()-1);
+			}
+			String temp2 = operand + sub;
+			String temp3 = s.replaceFirst(temp2, "");
+			first = temp3.replaceFirst("(", "");
+
 		}
+		int indexLeft = LineNumCollection.indexOf(second);
+		int indexRight = LineNumCollection.indexOf(first);
+		Expression lefty = expressionList.get(indexLeft);
+		Expression righty = expressionList.get(indexRight);
+		if (operand.equals("=>")||operand.equals("|")){
+			if (lefty.checkBoolean()==false && righty.checkBoolean()==false){
+				return false;
+			}
+		}else{
+			if (lefty.checkBoolean() == false || righty.checkBoolean() ==false){
+				return false;
+			}
+		}
+		return true;
 	}
-	
 	
 	// check if index of expression corresponds to correct line number. will be called everytime in extendproof.
 	public boolean isOK(){
-		if (expressionList.size()==LineNumCollection.size()){
+		if (expressionList.size()+1==LineNumCollection.size()){
 			return true;
 		}else{
 			return false;
