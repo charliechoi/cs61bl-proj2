@@ -368,6 +368,4 @@ public class Proof {
 	}
 }
 	
-	
-	
 
