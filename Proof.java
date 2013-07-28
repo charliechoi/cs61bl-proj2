@@ -347,7 +347,7 @@ public class Proof {
 	}
 	
 	public void update(Expression proofExpression){
-		System.out.println(showStack.peek().myLine);
+		//System.out.println(showStack.peek().myLine);
 		if(proofExpression.myLine.equals(showStack.peek().myLine)){
 			number.DeleteSub();
 			// assign the most recent show object to true or false depending on number of ~.
