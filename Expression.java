@@ -7,8 +7,14 @@ public class Expression {
     protected boolean somethin = false;
     public Expression(String line) {
         myLine=line;
+        try{
+        	validExpr(myLine);
+        }catch(IllegalLineException e){
+        	System.out.println(e.getMessage());
+        }
 
     }
+    
     protected static class TreeNode {
 
         public Object myItem;
@@ -27,6 +33,8 @@ public class Expression {
         }
 
     }
+    
+    
     public String aString(){
         return myLine;
     }
@@ -295,4 +303,5 @@ public class Expression {
         return true;
   
     }
+   
 }
