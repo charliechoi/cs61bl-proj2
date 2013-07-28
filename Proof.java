@@ -37,14 +37,18 @@ public class Proof {
 				System.out.print(toString());
 			} else {
 				//update line repository
-				LineNumCollection.add(number.get());
+				
 				LineQueue.add(number.get());
 				//update proof repository
 				proofQueue.add(x);
 				//split reason from line numbers from proof.
 				String[] split = x.split(" ",0);
+				
 				//obtain proof expression
-				Expression proofExpression = new Expression(split[split.length-1]);
+				
+					Expression proofExpression = new Expression(split[split.length-1]);
+
+				
 				//an attempt to figure out if expression requires false or true when setting boolean at the end.
 				int notCount=0;
 				String temp = split[split.length-1];
@@ -69,12 +73,12 @@ public class Proof {
 				//mp
 				if (split[0].equals("mp")){
 					if (split.length == 4){
+						LineNumCollection.add(number.get());
 						int indexOne = LineNumCollection.indexOf(split[1]);
 						int indexTwo = LineNumCollection.indexOf(split[2]);
 						//get the corresponding expressions
 						Expression first = expressionList.get(indexOne);
 						Expression second = expressionList.get(indexTwo);
-						
 						if (!this.checkingMP(proofExpression, split)){
 							throw new IllegalInferenceException("mp error: two expressions are not related to each other");
 						} else {
@@ -115,6 +119,7 @@ public class Proof {
 					
 				//show	
 				} else if (split[0].equals("show")){
+					LineNumCollection.add(number.get());
 					if(split.length==2){
 						if(showStack.isEmpty()){
 							number.NewLine();
@@ -129,75 +134,95 @@ public class Proof {
 					
 					
 				//assume	
-				} else if (split[0].equals("assume") && split.length==2){
-					//System.out.println(notCount);
-					if (notCount%2==1){
-						proofExpression.setBoolean(false);
-					}else{
-						proofExpression.setBoolean(true);
-					}
-					//System.out.println(proofExpression.checkBoolean());
-					expressionList.add(proofExpression);
-					assumeexpressionStringList.add(proofExpression.myLine);
-					number.NewLine();
-					
-				//mt	
-				}else if (split[0].equals("mt") && split.length==4){
-				
-					if (!this.checkingMT(proofExpression, split)){
-						throw new IllegalInferenceException("mt check error");
-					} else {
-						if (this.getLonger(split).checkBoolean()==true){
-							if (notCount%2==1){
-								proofExpression.setBoolean(false);
-							}else{
-								proofExpression.setBoolean(true);
-							}
-							expressionList.add(proofExpression);
-							this.update(proofExpression);
-						} else {
-							throw new IllegalInferenceException("mt error");
-						}
-					}
-					
-				//co
-				} else if (split[0].equals("co") && split.length==4){
-					int indexOne = LineNumCollection.indexOf(split[1]);
-					int indexTwo = LineNumCollection.indexOf(split[2]);
-					//get the corresponding expressions
-					Expression first = expressionList.get(indexOne);
-					Expression second = expressionList.get(indexTwo);
-					//System.out.println(first.myLine);
-					//System.out.println(second.myLine);
-					//System.out.println(first.checkBoolean());
-					//System.out.println(second.checkBoolean());
-					if(this.checkingCO(proofExpression)){
-						if(first.checkBoolean()!=second.checkBoolean()){
-							proofExpression.setBoolean(true);
-							expressionList.add(proofExpression);
-							this.update(proofExpression);
-						} else {
-							throw new IllegalInferenceException("co error");
-						} 
-					} else {
-						throw new IllegalInferenceException("co check error");
-					}
-					
-				
-				//ic	
-				}else if (split[0].equals("ic")&&split.length==3){
-					if(!this.checkingIC(proofExpression, split)){
-						throw new IllegalInferenceException("Invalid inference");
-					} else{
+				} else if (split[0].equals("assume")){
+					if(split.length==2){
+						LineNumCollection.add(number.get());
+						//System.out.println(notCount);
 						if (notCount%2==1){
 							proofExpression.setBoolean(false);
 						}else{
 							proofExpression.setBoolean(true);
 						}
+						//System.out.println(proofExpression.checkBoolean());
 						expressionList.add(proofExpression);
-						this.update(proofExpression);
+						assumeexpressionStringList.add(proofExpression.myLine);
+						number.NewLine();
+					} else {
+						throw new IllegalLineException("incorrect number of arguments, need 2");
+					}
+					
+				//mt	
+				}else if (split[0].equals("mt")) {
+					if (split.length==4){
+						LineNumCollection.add(number.get());
+						if (!this.checkingMT(proofExpression, split)){
+							throw new IllegalInferenceException("mt check error");
+						} else {
+							if (this.getLonger(split).checkBoolean()==true){
+								if (notCount%2==1){
+									proofExpression.setBoolean(false);
+								}else{
+									proofExpression.setBoolean(true);
+								}
+								expressionList.add(proofExpression);
+								this.update(proofExpression);
+							} else {
+								throw new IllegalInferenceException("mt error");
+							}
+						}
+					} else {
+						throw new IllegalLineException("incorrect number of arguments, need 4");
+					}
+	
+				//co
+				} else if (split[0].equals("co")){
+					if(split.length==4){
+						LineNumCollection.add(number.get());
+						int indexOne = LineNumCollection.indexOf(split[1]);
+						int indexTwo = LineNumCollection.indexOf(split[2]);
+						//get the corresponding expressions
+						Expression first = expressionList.get(indexOne);
+						Expression second = expressionList.get(indexTwo);
+						//System.out.println(first.myLine);
+						//System.out.println(second.myLine);
+						//System.out.println(first.checkBoolean());
+						//System.out.println(second.checkBoolean());
+						
+						if(this.checkingCO(proofExpression)){
+							if(first.checkBoolean()!=second.checkBoolean()){
+								proofExpression.setBoolean(true);
+								//System.out.println(proofExpression.myLine);
+								expressionList.add(proofExpression);
+								this.update(proofExpression);
+							} else {
+								throw new IllegalInferenceException("co error");
+							} 
+						} else {
+							throw new IllegalInferenceException("co check error");
+						}
+					} else {
+						throw new IllegalLineException("incorrect number of arguments, need 4");
 					}
 				
+				//ic	
+				}else if (split[0].equals("ic")){
+					if(split.length==3){
+						LineNumCollection.add(number.get());
+						if(!this.checkingIC(proofExpression, split)){
+							throw new IllegalInferenceException("Invalid inference");
+						} else{
+							if (notCount%2==1){
+								proofExpression.setBoolean(false);
+							}else{
+								proofExpression.setBoolean(true);
+							}
+							
+							expressionList.add(proofExpression);
+							this.update(proofExpression);
+						}
+					} else{
+						throw new IllegalLineException("incorrect number of arguments, need 3");
+					}
 					
 				} else if (theo.Theorem.containsKey(split[0])){
 					if (((Expression) theo.Theorem.get(split[0])).compare(proofExpression)){
@@ -210,14 +235,12 @@ public class Proof {
 				} 
 			}
 		}
-		
-	
 
 	public String toString ( ) {
 		Queue<String> LineQueueCopy = LineQueue;
 		Queue<String> proofQueueCopy = proofQueue;
 		String print = "" +"\n";
-	// update LineNum for not this line of proof but next line.
+		// update LineNum for not this line of proof but next line.
 		while(!proofQueue.isEmpty()){
 			print = print + LineQueueCopy.remove()+"	"+ proofQueueCopy.remove() +"\n";		
 		}
@@ -235,8 +258,8 @@ public class Proof {
 	public boolean checkingMP(Expression proofExpression, String[] split){
 			//System.out.println(this.getLeft(split));
 			//System.out.println(this.getShorter(split).myLine);
-			System.out.println(this.getRight(split));
-			System.out.println(proofExpression.myLine);
+			//System.out.println(this.getRight(split));
+			//System.out.println(proofExpression.myLine);
 			if(this.getLeft(split).equals(this.getShorter(split).myLine) && this.getRight(split).equals(proofExpression.myLine)){
 				return true;
 			} else{
@@ -267,18 +290,18 @@ public class Proof {
 	}
 	
 	public boolean checkingIC(Expression proofExpression, String[] split){
-		String Right = this.getRight(split);
-		String Left = this.getLeft(split);
 		int indexOne = LineNumCollection.indexOf(split[1]);
 		Expression first = expressionList.get(indexOne);
-		int tempindex = expressionList.indexOf(Left);
-		if (first.myLine.equals(Right)){
+		int firstIndex= split[2].lastIndexOf(first.myLine);
+		if(firstIndex !=-1){
+			String Left = split[2].substring(1,firstIndex-2);
+			//System.out.println(Left);
 			if(assumeexpressionStringList.contains(Left)){
 				return true;
 			} else{
 				return false;
 			}
-		} else{ 
+		} else{
 			return false;
 		}
 	}
@@ -306,8 +329,12 @@ public class Proof {
 	}
 	
 	public Expression getShorter(String [] split){
+
 		int indexOne = LineNumCollection.indexOf(split[1]);
 		int indexTwo = LineNumCollection.indexOf(split[2]);
+		//System.out.println(indexOne);
+		//System.out.println(indexTwo);
+		
 		//get the corresponding expressions
 		Expression first = expressionList.get(indexOne);
 		Expression second = expressionList.get(indexTwo);
@@ -349,7 +376,9 @@ public class Proof {
 	public void update(Expression proofExpression){
 		//System.out.println(showStack.peek().myLine);
 		if(proofExpression.myLine.equals(showStack.peek().myLine)){
-			number.DeleteSub();
+			//System.out.println(number.get());
+			
+			//System.out.println(number.get());
 			// assign the most recent show object to true or false depending on number of ~.
 			Expression recentShow = showStack.pop();
 			Expression show = expressionList.get(expressionList.indexOf(recentShow));
@@ -361,7 +390,11 @@ public class Proof {
 				expressionList.get(expressionList.indexOf(recentShow)).setBoolean(false);
 			}else{
 				expressionList.get(expressionList.indexOf(recentShow)).setBoolean(true);
-			}	
+			}
+			
+			if (number.get().length()>1){
+				number.DeleteSub();
+			}
 		} else {
 			number.NewLine();
 		}
@@ -379,6 +412,9 @@ public class Proof {
 	
 	// check if index of expression corresponds to correct line number. will be called everytime in extendproof.
 	public boolean isOK(){
+		//System.out.println(expressionList.size());
+		//System.out.println(LineNumCollection.size());
+		
 		if (expressionList.size()==LineNumCollection.size()){
 			return true;
 		}else{
