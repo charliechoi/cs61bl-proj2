@@ -291,6 +291,9 @@ public class Proof {
 
 	public boolean checkingIC(Expression proofExpression, String[] split){
 		int indexOne = LineNumCollection.indexOf(split[1]);
+		if (indexOne == -1){
+			return false;
+		}
 		Expression first = expressionList.get(indexOne);
 		int firstIndex= split[2].lastIndexOf(first.myLine);
 		//System.out.println(firstIndex);
@@ -429,4 +432,3 @@ public class Proof {
 		}
 	}
 }
-
