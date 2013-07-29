@@ -30,6 +30,7 @@ public class Proof {
 		// if the reason is the name of the theorem, access the hashmap of inputted theorem names and the corresponding expression.
 		// then check if the input expression MATCHES (create another method or class) the theorem expression.
 		
+		//add to proof collection for accessing later.
 		if (this.isOK()){
 			
 			if (x.equals("print")){
@@ -69,6 +70,7 @@ public class Proof {
 				//System.out.println(temp);
 				notCount = split[split.length-1].length() - temp.length();
 				//System.out.println(notCount);
+				
 				//mp
 				if (split[0].equals("mp")){
 					if (split.length == 4){
@@ -81,37 +83,19 @@ public class Proof {
 						if (!this.checkingMP(proofExpression, split)){
 							throw new IllegalInferenceException("mp error: two expressions are not related to each other");
 						} else {
-							if (first.checkBoolean()){
-								if(second.checkBoolean()){
-									if (notCount%2==1){
-										proofExpression.setBoolean(false);
-									}else{
-										proofExpression.setBoolean(true);
-									}
-									//update expressionList
-									expressionList.add(proofExpression);
-									//update line number and add boolean to show if pertinent.
-									this.update(proofExpression);
-								} else {
-									throw new IllegalInferenceException("mp error: illegal inference");
+							//System.out.println(first.checkBoolean());
+							//System.out.println(second.checkBoolean());
+							Expression Shorter = getShorter(split);
+								if (Shorter.checkBoolean()==false){
+									proofExpression.setBoolean(false);
+								}else{
+									proofExpression.setBoolean(true);
 								}
-							} else if (!first.checkBoolean()){
-								if (!second.checkBoolean()){
-									if (notCount%2==1){
-										proofExpression.setBoolean(false);
-									}else{
-										proofExpression.setBoolean(true);
-									}
-									//update expression
-									expressionList.add(proofExpression);
-									this.update(proofExpression);
-								} else{
-									throw new IllegalInferenceException("mp error: illegal inference");
-								}	
-							} else{
-								throw new IllegalInferenceException("mp error: expression is not assigned boolean");
+								//update expressionList
+								expressionList.add(proofExpression);
+								//update line number and add boolean to show if pertinent.
+								this.update(proofExpression);
 							}
-						}
 					} else {
 						throw new IllegalLineException("mp error: not the correct number of arguments, need four");
 					}
@@ -224,12 +208,22 @@ public class Proof {
 					}
 					
 				} else if (theo.Theorem.containsKey(split[0])){
-					if (((Expression) theo.Theorem.get(split[0])).compare(proofExpression)){
+					
+					//System.out.println(theo.Theorem.get(split[0]).myLine);
+					//System.out.println(proofExpression.myLine);
+					if (theo.Theorem.get(split[0]).compare(proofExpression)){
+						LineNumCollection.add(number.get());
 						proofExpression.setBoolean(true);
+						expressionList.add(proofExpression);
+						this.update(proofExpression);
 					} else {
+						System.out.println(LineNumCollection.size());
+						System.out.println(expressionList.size());
 						throw new IllegalInferenceException("Theorem match error");
 					}
-				} 
+				} else {
+					throw new IllegalLineException("Invalid reason");
+				}
 					
 				} 
 			}
@@ -292,14 +286,16 @@ public class Proof {
 		int indexOne = LineNumCollection.indexOf(split[1]);
 		Expression first = expressionList.get(indexOne);
 		int firstIndex= split[2].lastIndexOf(first.myLine);
+		//System.out.println(firstIndex);
 		if(firstIndex !=-1){
-			String Left = split[2].substring(1,firstIndex-2);
-			//System.out.println(Left);
-			if(assumeexpressionStringList.contains(Left)){
-				return true;
-			} else{
-				return false;
-			}
+				String Left = split[2].substring(1,firstIndex-2);
+				//System.out.println(Left);
+				if(assumeexpressionStringList.contains(Left)){
+					return true;
+				} else{
+					return false;
+				}
+			
 		} else{
 			return false;
 		}
