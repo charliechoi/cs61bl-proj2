@@ -110,13 +110,14 @@ public class Expression {
             int opPos = 0;
             int opPos2 =0; //deal specifically with =>
             boolean addNot=false;
-
+            int countnot=0;
             for (int k=0; k<expr.length()-1; k++) {
                 if(expr.charAt(k)=='('){
                     nesting++;
                 }else if(expr.charAt(k)==')'){
                     nesting--;
-                }else if(expr.charAt(k)=='~'&&nesting==1&& expr.charAt(k+1)=='('){
+                }else if(expr.charAt(k)=='~'&&(nesting==1||nesting==0)&& expr.charAt(k+1)=='('){
+                	countnot++;
                     addNot=true;
                 }else if(expr.charAt(k)=='='&&nesting==1){
                     opPos2=k;
@@ -134,9 +135,11 @@ public class Expression {
                 }
             }
             if (addNot){
-                op="~"+op;
+                if(countnot%2==0){
+            	op="~"+op;}
                 addNot=false;
-                opnd1=opnd1.substring(1);
+    
+                	opnd1=opnd1.substring(countnot+1);
             }
             System.out.println ("expression = " + expr);
             System.out.println ("operand 1 = " + opnd1);
@@ -149,7 +152,7 @@ public class Expression {
 
     public void validExpr(String line) throws IllegalLineException {
         // this is a recursive method to check if a String is a valid expr
-        String s=line;
+        String s=line.toString();
     	Set<Character> ops = new HashSet<Character>();
         ops.add('=');
         ops.add('&');
@@ -307,6 +310,4 @@ public class Expression {
   
     }
     
-    
-   
 }
