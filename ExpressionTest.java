@@ -1,4 +1,3 @@
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -15,12 +14,7 @@ public class ExpressionTest extends TestCase{
 	public static void testvalidExpr1(){          // testing misconstruction with the parenthesis
 		boolean result1=false;
 		Expression a;
-		try {
-			a = new Expression("a&d");
-		} catch (IllegalLineException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 		try{
 			a= new Expression("a&d");
 			a.validExpr("a&d");		
@@ -59,32 +53,23 @@ public class ExpressionTest extends TestCase{
 		boolean result3=false;
 		try{
 		Expression c = new Expression("(((a|d)=>a)%d)");
-		try{
-			c.validExpr("(((a|d)=>a)%d)");		
+			
 		}catch (IllegalLineException e){
 			result3=true;
 		}assertTrue(result3);
-
-
-		}catch (IllegalLineException e){
-			e.printStackTrace();
-		}
 	}
 
 	public static void testvalidExpr3(){  
 		boolean result1=false;
 		try{
 		Expression a = new Expression("((aa=>d)|a)");
-		try{
-			a.validExpr("((aa=>d)|a)");		
+				
 		}catch (IllegalLineException e){
 			result1=true;
 		}assertTrue(result1);
 
 
-		}catch (IllegalLineException e){
-			e.printStackTrace();
-		}
+		
 	}
 
 	public static void testString(){
@@ -103,7 +88,7 @@ public class ExpressionTest extends TestCase{
 	}
 
 	public static void testPrint(){
-		
+
 		try{
 		Expression a = new Expression("(a&b)");
 		Expression b = new Expression("(c&d)");
@@ -140,10 +125,3 @@ public class ExpressionTest extends TestCase{
 	}
 	}
 }
-
-
-
-
-
-
-	
