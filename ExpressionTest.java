@@ -7,10 +7,10 @@ import org.junit.Test;
 public class ExpressionTest extends TestCase{
 
 	@Test
-	
+
 	public static void test2(){
 		System.out.println("Start Testing");
-		
+
 	}
 	public static void testvalidExpr1(){          // testing misconstruction with the parenthesis
 		boolean result1=false;
@@ -22,64 +22,73 @@ public class ExpressionTest extends TestCase{
 			e1.printStackTrace();
 		}
 		try{
+			a= new Expression("a&d");
 			a.validExpr("a&d");		
 		}catch (IllegalLineException e){
-			
+
 			result1=true;
 		}assertTrue(result1);
-		
+
 		boolean result2=false;
-		Expression b = new Expression("a&d))");
 		try{
+			Expression b = new Expression("a&d))");
 			b.validExpr("a&d))");		
 		}catch (IllegalLineException e){
 			result2=true;
 		}assertTrue(result2);
 	}
-	
+
 	public static void testvalidExpr2(){    // testing misconstructin with the operands
 		boolean result1=false;
-		Expression a = new Expression("(a&&d)");
 		try{
+			Expression a = new Expression("(a&&d)");
 			a.validExpr("(a&&d)");		
 		}catch (IllegalLineException e){
 			result1=true;
 		}assertTrue(result1);
-		
-		
+
+
 		boolean result2=false;
-		Expression b = new Expression("(((a|d)=>a)%d)");
 		try{
+			Expression b = new Expression("(((a|d)=>a)%d)");
 			b.validExpr("(((a|d)=>a)%d)");		
 		}catch (IllegalLineException e){
 			result2=true;
 		}assertTrue(result2);
-		
+
 		boolean result3=false;
+		try{
 		Expression c = new Expression("(((a|d)=>a)%d)");
 		try{
 			c.validExpr("(((a|d)=>a)%d)");		
 		}catch (IllegalLineException e){
 			result3=true;
 		}assertTrue(result3);
-		
-		
+
+
+		}catch (IllegalLineException e){
+			e.printStackTrace();
+		}
 	}
-	
+
 	public static void testvalidExpr3(){  
 		boolean result1=false;
+		try{
 		Expression a = new Expression("((aa=>d)|a)");
 		try{
 			a.validExpr("((aa=>d)|a)");		
 		}catch (IllegalLineException e){
 			result1=true;
 		}assertTrue(result1);
-		
-		
+
+
+		}catch (IllegalLineException e){
+			e.printStackTrace();
+		}
 	}
-	
+
 	public static void testString(){
-		
+		try{
 		Expression a = new Expression("(a&b)");
 		Expression b = new Expression("(c&d)");
 		assertTrue(a.aString().equals("(a&b)"));
@@ -87,20 +96,28 @@ public class ExpressionTest extends TestCase{
 		assertTrue(b.aString().equals("(c&d)"));
 		assertFalse(a.aString().equals(b.aString()));
 		assertTrue(a.aString().equals(a.aString()));
-		
+
+	}catch (IllegalLineException e){
+		assertTrue(false);
 	}
-	
+	}
+
 	public static void testPrint(){
+		
+		try{
 		Expression a = new Expression("(a&b)");
 		Expression b = new Expression("(c&d)");
 		a.expr();
 		a.print();
 		b.expr();
 		b.print();
-		
+
+	}catch (IllegalLineException e){
+		assertTrue(false);
 	}
-	
+	}
 	public static void testCompare(){
+		try{
 		Expression a = new Expression("(a&b)");
 		Expression b = new Expression("(c&d)");
 		assertTrue(a.compare(b));
@@ -117,15 +134,16 @@ public class ExpressionTest extends TestCase{
 		Expression h = new Expression("(a|(b=>(a|b)))");
 		Expression k = new Expression("((x|y)|((x&b)=>((x|y)|(x&b))))");
 		assertTrue(h.compare(k));
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	}
 
+	}catch (IllegalLineException e){
+		assertTrue(false);
+	}
+	}
+}
+
+
+
+
+
+
+	
